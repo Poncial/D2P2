@@ -1,0 +1,147 @@
+---
+title: "Règles de validation"
+author: "Alexandre Poncin"
+format: pdf
+editor: visual
+---
+
+# Règles de validation des données
+
+## 1. Règles générales
+
+-   Chaque jeune doit avoir un **identifiant unique**.
+-   Chaque épisode doit avoir un **identifiant unique**.
+-   Chaque structure doit avoir un **identifiant unique**.
+-   Les champs obligatoires ne doivent pas être vides.
+-   Les formats de données doivent être corrects :
+    -   les dates doivent être de vraies dates ;
+    -   les durées doivent être numériques entières ;
+    -   les variables oui/non doivent être codées de manière cohérente.
+
+
+## 2. Validation de la table des individus
+
+-   Chaque jeune ne doit apparaître **qu’une seule fois** dans la table des individus.
+-   La **date de naissance** doit être renseignée.
+-   La **date d’admission** doit être renseignée.
+-   La **date de majorité** doit être cohérente avec la date de naissance.
+-   La **date d’admission** doit être postérieure à la date de naissance.
+-   La **date de sortie** ne peut pas être antérieure à la date d’admission.
+-   Si le suivi est terminé, la **destination finale** devrait être renseignée.
+-   L’âge à l’admission doit être **plausible** pour la population étudiée.
+-   L’individu doit être **mineur au moment de l’admission**, si l’analyse porte sur du placement de mineurs.
+
+
+## 3. Validation de la table des épisodes
+
+-   Chaque épisode doit être rattaché à **un jeune existant** dans la table des individus.
+-   Le type d’épisode doit appartenir à une liste fermée et standardisée, par exemple :
+    -   séjour ;
+    -   congé ;
+    -   fugue.
+-   Chaque épisode doit avoir une **date de début**.
+-   La **date de fin** doit être renseignée si l’épisode est terminé.
+-   La date de fin ne peut pas être antérieure à la date de début.
+-   La durée doit être cohérente avec les dates de début et de fin.
+-   Les épisodes d’un même jeune doivent être **ordonnés chronologiquement**.
+-   Le rang des épisodes doit être **continu**, sans saut.
+-   Le premier épisode doit correspondre au début effectif de la prise en charge.
+-   Le dernier épisode doit être cohérent avec la date de sortie ou le statut “en cours”.
+
+
+## 4. Validation des relations entre tables
+
+-   Tous les identifiants de jeunes présents dans la table des épisodes doivent exister dans la table des individus.
+-   Tous les identifiants de structures présents dans la table des épisodes doivent exister dans la table des structures.
+-   Aucun épisode ne doit être rattaché à une structure inexistante.
+-   Aucun jeune ne devrait être présent dans la table des individus sans aucun épisode associé, sauf cas particulier clairement documenté.
+
+
+## 5. Validation temporelle
+
+-   Les épisodes doivent se situer **à l’intérieur de la période de suivi** de l’individu.
+-   Aucun épisode ne doit commencer avant la date d’admission.
+-   Aucun épisode terminé ne doit finir après la date de sortie, sauf si cette situation est explicitement prévue.
+-   Deux épisodes de même nature ne devraient pas se chevaucher de manière incohérente.
+-   Les séjours principaux ne devraient pas se chevaucher entre eux.
+-   Les chevauchements autorisés doivent être définis explicitement, par exemple :
+    -   une fugue peut avoir lieu pendant un séjour ;
+    -   un congé peut être lié à une interruption temporaire d’un séjour selon les règles métier adoptées.
+
+
+## 6. Validation métier spécifique au placement
+
+-   Un épisode de **fugue** doit normalement être rattaché à une période où le jeune est placé.
+-   Un épisode de **séjour** doit en principe être associé à une structure.
+-   Un épisode de **congé** ne doit pas être confondu avec une sortie définitive.
+-   La provenance du premier épisode devrait être renseignée.
+-   La destination du dernier épisode devrait être renseignée.
+-   Une sortie pour **majorité** doit être cohérente avec la date de majorité.
+-   Une destination “retour en famille” ou “autonomie” doit être utilisée de manière standardisée.
+-   Les libellés de provenance et de destination doivent être harmonisés pour éviter les doublons.
+
+
+## 7. Validation des valeurs catégorielles
+
+-   Les catégories doivent être **standardisées** :
+    -   pas de variantes orthographiques inutiles ;
+    -   pas de mélanges de langues ;
+    -   pas de doublons sémantiques.
+-   Une même structure doit toujours porter le **même nom** ou le même code.
+-   Les mêmes modalités doivent être utilisées dans l’ensemble des fichiers pour :
+    -   les types d’épisodes ;
+    -   les provenances ;
+    -   les destinations ;
+    -   les structures.
+
+
+
+## 8. Validation des durées
+
+-   La durée d’un épisode doit être **positive ou nulle**
+-   Les durées très longues doivent être contrôlées.
+-   Les durées très courtes doivent aussi être contrôlées si elles paraissent inhabituelles.
+-   Les durées doivent être calculées de manière uniforme dans tout le fichier.
+-   Si la durée est stockée dans le fichier, elle doit toujours être vérifiée à partir des dates.
+
+
+## 9. Validation de complétude
+
+-   Les variables essentielles à l’analyse ne doivent pas être manquantes.
+-   Il faut identifier les champs pour lesquels les valeurs manquantes sont acceptables et ceux pour lesquels elles ne le sont pas.
+-   Le taux de valeurs manquantes doit être documenté.
+-   Les épisodes “en cours” doivent être clairement identifiables.
+-   Les cas incomplets doivent être distingués des cas réellement absents.
+
+
+## 10. Validation pour les analyses de trajectoires
+
+-   Chaque jeune doit avoir une suite d’épisodes reconstituable dans le temps.
+-   Les règles de priorité entre états doivent être définies avant transformation en séquence, par exemple :
+    -   fugue prioritaire sur séjour ;
+    -   congé prioritaire ou non selon la logique retenue.
+-   Les trous dans la trajectoire doivent être identifiés :
+    -   soit comme périodes non documentées ;
+    -   soit comme véritables absences de prise en charge.
+-   La granularité temporelle choisie pour l’analyse doit être la même pour tous les jeunes.
+-   Toutes les trajectoires doivent pouvoir être transformées de manière cohérente dans un format séquentiel comparable.
+
+
+## 11. Validation avant clustering ou visualisation
+
+-   Les données doivent être suffisamment homogènes pour être comparées entre individus.
+-   Les règles de codage doivent être identiques sur toute la cohorte.
+-   Les épisodes aberrants doivent être repérés avant toute analyse.
+-   Les individus avec trop peu d’information doivent être signalés.
+-   Les parcours très incomplets doivent être exclus ou traités séparément.
+-   Toute recodification ou agrégation doit être documentée.
+
+
+## 12. Bonnes pratiques de gouvernance des données
+
+-   Toute modification d’un fichier brut doit être traçable.
+-   Il faut conserver une version originale non modifiée des données sources.
+-   Les règles de nettoyage doivent être documentées.
+-   Les dictionnaires de variables et de modalités doivent être maintenus à jour.
+-   Les décisions de recodage doivent être explicites et reproductibles.
+

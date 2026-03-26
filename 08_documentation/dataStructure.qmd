@@ -1,0 +1,70 @@
+---
+title: "Plan de travail"
+author: "Alexandre Poncin"
+format: pdf
+editor: visual
+---
+
+## 1. Structure des données
+
+### Table `dtIndividus`
+
+**Granularité :** 1 ligne = 1 jeune\
+**Clé primaire :** `id`
+
+| Colonne | Type R | Requis | Description |
+|----|----|---:|----|
+| `id` | `character` | Oui | Identifiant anonymisé du jeune |
+| `dateNaissance` | `Date` | Oui | Date de naissance |
+| `dateMajorite` | `Date` | Oui | Date de majorité |
+| `dateAdmission` | `Date` | Oui | Date de première admission |
+| `dateSortie` | `Date` | Oui | Date de sortie définitive ; `NA` si suivi en cours |
+| `sexe` | `factor` ou `character` | Oui | Sexe du jeune |
+| `provenanceInit` | `character` | Oui | Provenance au moment de l’admission |
+| `nationalite` | `character` | Recommandé | Nationalité |
+| `codePostal` | `character` | Recommandé | Ville d’origine |
+| `motifAdmission` | `character` | Recommandé | Motif principal de placement |
+| `actif` | `logical` | Oui | `TRUE` si suivi en cours, sinon `FALSE` |
+| `dateCreation` | `POSIXct` | Oui | Horodatage de création de la ligne |
+| `dateModif` | `POSIXct` | Oui | Horodatage de dernière modification |
+
+### Table `dt_episodes`
+
+**Granularité :** 1 ligne = 1 épisode\
+**Clé primaire :** `idEpisode`\
+**Clé étrangère :** `id -> dtIndividus$id`
+
+| Colonne | Type R | Requis | Description |
+|----|----|---:|----|
+| `idEpisode` | `character` | Oui | Identifiant unique de l’épisode |
+| `id` | `character` | Oui | Identifiant du jeune |
+| `typeEpisode` | `factor` ou `character` | Oui | Type d’épisode : `sejour`, `conge`, `fugue`, `etc.` |
+| `idStructure` | `character` | Recommandé | Identifiant de la structure concernée |
+| `dateDebut` | `Date` | Oui | Date de début de l’épisode |
+| `dateFin` | `Date` | Recommandé | Date de fin de l’épisode ; `NA` si épisode en cours |
+| `duree` | `integer` | Oui | Durée de l’épisode en jours |
+| `provenance` | `character` | Recommandé | Provenance avant cet épisode |
+| `destination` | `character` | Recommandé | Destination après cet épisode |
+| `rangEpisode` | `integer` | Oui | Rang chronologique de l’épisode pour un jeune |
+| `enCours` | `logical` | Oui | `TRUE` si l’épisode n’est pas terminé |
+| `dateCreation` | `POSIXct` | Oui | Horodatage de création de la ligne |
+| `dateModif` | `POSIXct` | Oui | Horodatage de dernière modification |
+
+### Table `dt_structures`
+
+**Granularité :** 1 ligne = 1 structure\
+**Clé primaire :** `idStructure`
+
+| Colonne         | Type R                  | Requis | Description                 |
+|-----------------|-------------------------|-------:|-----------------------------|
+| `idStructure`   | `character`             |    Oui | Code unique de la structure |
+| `nomStructure`  | `character`             |    Oui | Nom complet de la structure |
+| `typeStructure` | `factor` ou `character` |    Oui | Type de structure           |
+| `codePostal`    | `character`             |    Oui | Ville                       |
+
+### Relations entre les tables
+
+| Table source | Colonne | Table cible | Colonne cible | Type de relation |
+|----|----|----|----|----|
+| `dt_episodes` | `id` | `dt_individus` | `id` | Plusieurs épisodes pour un jeune |
+| `dt_episodes` | `idStructure` | `dt_structures` | `idStructure` | Plusieurs épisodes dans une structure |
