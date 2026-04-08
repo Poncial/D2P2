@@ -1,0 +1,402 @@
+﻿Cas;ID;Âge;Âge (en années);Âge (mois supplémentaires);Date de référence;Date de naissance (calcul rétroactif);mois de naissance;année de naissance;Date majorité;Sexe;Nationalité / Pays d'origine;Nationalité_Pays_d'origine_Adap;Toutes les langues;Langue_LU;Langue_DE;Langue_FR;Langue_PT;Langue_EN;Langue_Autres;Lieu de résidence;absentéisme scolaire;fugues répétées;consommation de substances illicites;vente de subtances illicites;problème d'addiction;vol simple;vol avec coups et blessures;coups et blessures;cambriolage;détention d'armes et munitions;usage d'une arme;problèmes dans d'autres structures;difficultés psychologiques;difficultés psychiatriques;comportement sexualisé;harcèlement sexuel;viol;homicide involontaire;homicide commis avec volonté de donner la mort;tentative de meurtre;autre;Motif de sortie final;Motif de sortie final 2
+1;HbSqUn87tZE;19 - 04;19;4;25-08-25;25-04-06;4;2006;25-04-24;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+2;QCr7jyDca5A;18 - 10;18;10;25-08-25;25-10-06;10;2006;25-10-24;M;Luxembourg, Cap-Vert;keine eindeutige Angabe;LU,DE,FR,PT;1;1;1;1;;;Bascharage;;;;;;;;;;;;;;;;;;;;;;majorité ;
+3;esvx8H0ssAo;17 - 09;17;9;25-08-25;25-11-07;11;2007;25-11-25;M;Costa Rica;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+4;tzv7JHistVQ;15 - 06;15;6;25-08-25;25-02-10;2;2010;25-02-28;M;Luxembourg;Luxembourg;LU,DE,FR,EN;1;1;1;;1;;Wormeldange;;1;1;;;;;;;;;;1;1;;;;;;;; ;
+5;JuKLipDwu7g;18 - 01;18;1;25-08-25;25-07-07;7;2007;25-07-25;M;Portugal;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+6;UpKPi0hx35o;17 - 11;17;11;25-08-25;25-09-07;9;2007;25-09-25;F;Serbie-Montenegro;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+7;UYcWs5BnvQw;17 - 10;17;10;25-08-25;25-10-07;10;2007;25-10-25;F;Maroc;Nicht-EU;LU,FR;1;;1;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;
+8;4ODE869BosM;18 - 09;18;9;25-08-25;25-11-06;11;2006;25-11-24;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+9;YZZdawnCE72;17 - 00;17;0;25-08-25;25-08-08;8;2008;25-08-26;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+10;4kx5xWktEAk;18 - 11;18;11;25-08-25;25-09-06;9;2006;25-09-24;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+11;E2UtRYfHVSc;22 - 03;22;3;25-08-25;25-05-03;5;2003;25-05-21;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+12;N8WLtE67qIo;22 - 09;22;9;25-08-25;25-11-02;11;2002;25-11-20;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+13;pbEj7venfrs;18 - 00;18;0;25-08-25;25-08-07;8;2007;25-08-25;M;Luxembourg;Luxembourg;LU,DE,FR,PT,EN;1;1;1;1;1;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+14;r6ppFawowtI;18 - 10;18;10;25-08-25;25-10-06;10;2006;25-10-24;F;Portugal;EU (ohne Lux);LU,DE,FR,PT,EN;1;1;1;1;1;;Junglinster;;;;;;;;;;;;;;;;;;;;;;mesure ;
+15;f4ORxxqn2oY;19 - 01;19;1;25-08-25;25-07-06;7;2006;25-07-24;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;; ;
+16;iY9xx8akdNx;16 - 01;16;1;25-08-25;25-07-09;7;2009;25-07-27;M;Albanie;Nicht-EU;LU,FR;1;;1;;;;Wormeldange;;1;;;;1;;;;;;1;;;;;;;;;; ;
+17;cevi7kQtCoQ;16 - 10;16;10;25-08-25;25-10-08;10;2008;25-10-26;M;;NA;LU,DE,FR,PT;1;1;1;1;;;;;;1;1;;;;;;;;;;;;;;;;;; ;
+18;9vpqHcowXAs;22 - 03;22;3;25-08-25;25-05-03;5;2003;25-05-21;M;Portugal;EU (ohne Lux);LU,FR;1;;1;;;;;;;;;;;;;;;;;;;;;;;;;; ;
+19;8o0JVN1Myxg;18 - 07;18;7;25-08-25;25-01-07;1;2007;25-01-25;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+20;R72ODDKuoOc;19 - 10;19;10;25-08-25;25-10-05;10;2005;25-10-23;F;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+21;PfKe5p0oAxk;15 - 10;15;10;25-08-25;25-10-09;10;2009;25-10-27;F;Guinée;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+22;1ssDKtgkNZ6;21 - 03;21;3;25-08-25;25-05-04;5;2006;25-05-22;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+23;ddKSWAxsF8M;18 - 04;18;4;25-08-25;25-04-07;4;2007;25-04-25;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Bigonville;;;;;;;;;;;;;;;;;;;;;;mesure ;
+24;0gzqMD6NzEA;19 - 10;19;10;25-08-25;25-10-05;10;2005;25-10-23;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+25;scHOqqyeiTk;12 - 11;12;11;25-08-25;25-09-12;9;2012;25-09-30;F;Serbie-Montenegro;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+26;e9Da8x7t0Gw;18 - 08;18;8;25-08-25;25-12-06;12;2006;25-12-24;F;Portugal;EU (ohne Lux);;;;;;;;Sanem;;;;;;;;;;;;;;;;;;;;;;majorité ;
+27;X2AkmVKyJqU;22 - 06;22;6;25-08-25;25-02-03;2;2003;25-02-21;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+28;aFP8gcwK6M2;22 - 03;22;3;25-08-25;25-05-03;5;2003;25-05-21;M;Portugal;EU (ohne Lux);LU,FR,PT;1;;1;1;;;;;;;;;;;;;;;;;;;;;;;;; ;majorité
+29;nrqayWh81jA;21 - 09;21;9;25-08-25;25-11-03;11;2003;25-11-21;M;France;EU (ohne Lux);LU,FR;1;;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+30;suWtuJ5yx3E;22 - 00;22;0;25-08-25;25-08-03;8;2003;25-08-21;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Mondercange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+31;oew4sHEn8xQ;22 - 08;22;8;25-08-25;25-12-02;12;2002;25-12-20;M;;NA;LU,FR;1;;1;;;;Echternach;;;;;;;;;;;;;;;;;;;;;;majorité ;
+32;xnYMoBzP2TA;22 - 00;22;0;25-08-25;25-08-03;8;2003;25-08-21;M;Portugal;EU (ohne Lux);LU,PT;1;;;1;;;Schifflange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+33;huFitCJNFPx;19 - 08;19;8;25-08-25;25-12-05;12;2005;25-12-23;M;Maroc;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+34;gNpd9H71S8o;22 - 02;22;2;25-08-25;25-06-03;6;2003;25-06-21;M;Allemagne;EU (ohne Lux);LU,DE,FR,EN;1;1;1;;1;;Bertrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+35;47VkRVBhLZc;16 - 11;16;11;25-08-25;25-09-08;9;2008;25-09-26;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Differdange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+36;aM12zPm1wgk;17 - 06;17;6;25-08-25;25-02-08;2;2008;25-02-26;M;Italie;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+37;ApwrldrWVYs;16 - 04;16;4;25-08-25;25-04-09;4;2009;25-04-27;M;;NA;LU;1;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
+38;jdT3EVXaTbs;21 - 00;21;0;25-08-25;25-08-04;8;2004;25-08-22;F;Luxembourg;Luxembourg;LU,DE,FR,PT;1;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+39;ebCpBQOCgEw;21 - 05;21;5;25-08-25;25-03-04;3;2004;25-03-22;M;Luxembourg;Luxembourg;LU,FR,PT;1;;1;1;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+40;ICWHxmTu1kc;22 - 11;22;11;25-08-25;25-09-02;9;2002;25-09-20;M;Cap-Vert;Nicht-EU;LU,DE,FR;1;1;1;;;;Petange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+41;iEVmpAxzFYx;21 - 02;21;2;25-08-25;25-06-04;6;2004;25-06-22;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Soleuvre;;;;;;;;;;;;;;;;;;;;;;majorité ;
+42;iyL8HRD9Erw;20 - 06;20;6;25-08-25;25-02-05;2;2005;25-02-23;F;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+43;fMxxUx15J6M;17 - 03;17;3;25-08-25;25-05-08;5;2008;25-05-26;F;Portugal;EU (ohne Lux);;;;;;;;Junglinster;;;;;;;;;;;;;;;;;;;;;;mesure ;
+44;QH0PsrCB1ux;19 - 08;19;8;25-08-25;25-12-05;12;2005;25-12-23;M;Luxembourg, Portugal;keine eindeutige Angabe;LU,DE,FR,PT;1;1;1;1;;;Differdange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+45;L0U8EDk4nDA;20 - 07;20;7;25-08-25;25-01-05;1;2005;25-01-23;M;Algérie;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+46;5dLy2XOsURk;19 - 10;19;10;25-08-25;25-10-05;10;2005;25-10-23;M;France;EU (ohne Lux);FR;;;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+47;vEGuXmoIdwx;19 - 01;19;1;25-08-25;25-07-06;7;2006;25-07-24;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+48;KaU07qsCQ86;18 - 09;18;9;25-08-25;25-11-06;11;2006;25-11-24;M;Erythrée;Nicht-EU;;;;;;;;;;;1;;;;;;1;;1;;;;;;;;;;;mesure ;mesure
+49;femeoaNCLQY;17 - 10;17;10;25-08-25;25-10-07;10;2007;25-10-25;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Beckerich;;;;;;;;;;;;;;;;;;;;;;mesure ;
+50;9P4vFF1IcIE;18 - 06;18;6;25-08-25;25-02-07;2;2007;25-02-25;F;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+51;avxFB8ayuOM;18 - 08;18;8;25-08-25;25-12-06;12;2006;25-12-24;F;Portugal;EU (ohne Lux);LU,DE,FR,PT,EN;1;1;1;1;1;;Junglinster;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+52;YApu6y4ONBE;21 - 06;21;6;25-08-25;25-02-04;2;2004;25-02-22;M;Maroc;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+53;uiGHX42gQPI;19 - 08;19;8;25-08-25;25-12-05;12;2005;25-12-23;M;Luxembourg;Luxembourg;LU,DE,FR,PT;1;1;1;1;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+54;eSZLzPoxSRs;17 - 03;17;3;25-08-25;25-05-08;5;2008;25-05-26;F;Portugal;EU (ohne Lux);;;;;;;;Mondorf-les-Bains;;;;;;;;;;;;;;;;;;;;;; ;
+55;9mtjY20WoKw;17 - 04;17;4;25-08-25;25-04-08;4;2008;25-04-26;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+56;1LaVceH0C3o;21 - 00;21;0;25-08-25;25-08-04;8;2004;25-08-22;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+57;zqn8En9SvH6;19 - 03;19;3;25-08-25;25-05-06;5;2006;25-05-24;M;Portugal;EU (ohne Lux);LU,DE,FR,EN,PT;1;1;1;1;1;;Sanem;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+58;7OYdAcoUtHk;16 - 09;16;9;25-08-25;25-11-08;11;2008;25-11-26;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+59;oFufKZz7p1E;21 - 02;21;2;25-08-25;25-06-04;6;2004;25-06-22;M;Portugal;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+60;hJT3o5ZZPws;17 - 04;17;4;25-08-25;25-04-08;4;2008;25-04-26;M;Portugal, Luxembourg;keine eindeutige Angabe;LU,DE,FR,PT;1;1;1;1;;;Wormeldange;;1;1;1;;;;;;;;1;;;;;;;;;; ;
+61;0t6RsYr5aPc;17 - 07;17;7;25-08-25;25-01-08;1;2008;25-01-26;M;Luxembourg;Luxembourg;LU,FR,PT;1;;1;1;;;Dudelange;;;;;;;;;;;;;;;;;;;;;; ;
+62;1kzAMo2wWbo;19 - 03;19;3;25-08-25;25-05-06;5;2006;25-05-24;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+63;HxUnlWQ5bOw;22 - 06;22;6;25-08-25;25-02-03;2;2003;25-02-21;M;;NA;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+64;uTYU62AJDHc;22 - 00;22;0;25-08-25;25-08-03;8;2003;25-08-21;F;Portugal;EU (ohne Lux);LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+65;x14bVhGB5f2;20 - 00;20;0;25-08-25;25-08-05;8;2005;25-08-23;M;Luxembourg;Luxembourg;;;;;;;;Dudelange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+66;fDMqN4N6Oox;19 - 00;19;0;25-08-25;25-08-06;8;2006;25-08-24;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Echternach;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+67;Banprzj0PQA;22 - 03;22;3;25-08-25;25-05-03;5;2003;25-05-21;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+68;X7SxsdLY56M;17 - 07;17;7;25-08-25;25-01-08;1;2008;25-01-26;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Bascharage;;;;;;;;;;;;;;;;;;;;;;mesure ;
+69;vFDgoFczgvc;21 - 07;21;7;25-08-25;25-01-04;1;2004;25-01-22;F;France;EU (ohne Lux);FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+70;z9mWhxdoBQc;19 - 01;19;1;25-08-25;25-07-06;7;2006;25-07-24;M;Luxembourg, Cap-Vert;keine eindeutige Angabe;LU,FR,PT;1;;1;1;;;Luxembourg;;;;1;;;;;;;;;;;;;;;;;;majorité ;
+71;bMW3icxMoBx;21 - 00;21;0;25-08-25;25-08-04;8;2004;25-08-22;M;Maroc;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+72;cThITkkcMk6;18 - 08;18;8;25-08-25;25-12-06;12;2006;25-12-24;F;Portugal;EU (ohne Lux);;;;;;;;Ettelbruck;;;;;;;;;;;;;;;;;;;;;;mesure ;
+73;pBIx0MKK6aI;16 - 04;16;4;25-08-25;25-04-09;4;2009;25-04-27;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+74;IuO5k4SA3oo;19 - 05;19;5;25-08-25;25-03-06;3;2006;25-03-24;F;Roumanie;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+75;OOuOkd1xkxx;20 - 01;20;1;25-08-25;25-07-05;7;2005;25-07-23;M;Iraq;Nicht-EU;LU,DE,FR,EN;1;1;1;;1;;Dudelange;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+76;wrzGGYjmFLg;20 - 03;20;3;25-08-25;25-05-05;5;2005;25-05-23;M;Portugal;EU (ohne Lux);LU,FR,PT;1;;1;1;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+77;R9xbn3hicVU;19 - 02;19;2;25-08-25;25-06-06;6;2006;25-06-24;M;Tunisie;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+78;MaunKDnJfCs;22 - 08;22;8;25-08-25;25-12-02;12;2002;25-12-20;F;;NA;LU,DE;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+79;mc6uJMie0SY;21 - 07;21;7;25-08-25;25-01-04;1;2004;25-01-22;M;Luxembourg;Luxembourg;LU,FR,PT;1;;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+80;9Bhm8kh0xkw;20 - 04;20;4;25-08-25;25-04-05;4;2005;25-04-23;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+81;OQtjHxxGCcE;14 - 11;14;11;25-08-25;25-09-10;9;2010;25-09-28;F;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Bourglinster;;1;1;;;;;;;;;1;1;;;;;;;;; ;
+82;qkbIGcQmtlc;19 - 04;19;4;25-08-25;25-04-06;4;2006;25-04-24;M;Etats Unis d'Amérique;Nicht-EU;FR,EN;;;1;;1;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+83;4kJ8UOJHQ5o;20 - 06;20;6;25-08-25;25-02-05;2;2005;25-02-23;M;Italie;EU (ohne Lux);LU,FR;1;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+84;0gYi3VG2Xcw;17 - 08;17;8;25-08-25;25-12-07;12;2007;25-12-25;F;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
+85;wxuG7Gt5xA6;20 - 08;20;8;25-08-25;25-12-04;12;2004;25-12-22;M;France;EU (ohne Lux);LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+86;SVdcsrdCkUg;17 - 05;17;5;25-08-25;25-03-08;3;2008;25-03-26;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schifllange;;;;;;;;;;;;;1;;;;;;;;; ;
+87;AipnkxRUP0s;20 - 09;20;9;25-08-25;25-11-04;11;2004;25-11-22;F;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+88;PECvYzaZLHA;19 - 04;19;4;25-08-25;25-04-06;4;2006;25-04-24;M;Espagne;EU (ohne Lux);FR;;;1;;;;Frisange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+89;bWXRbF8lVG6;19 - 11;19;11;25-08-25;25-09-05;9;2005;25-09-23;M;Tunisie;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+90;mEZG5UpNyao;22 - 07;22;7;25-08-25;25-01-03;1;2003;25-01-21;F;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+91;d8TIl72sYTI;20 - 02;20;2;25-08-25;25-06-05;6;2005;25-06-23;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+92;YYH29cx4zzA;20 - 09;20;9;25-08-25;25-11-04;11;2004;25-11-22;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
+93;Y2veFRLaFxs;19 - 10;19;10;25-08-25;25-10-05;10;2005;25-10-23;M;Syrie;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+94;TISPczm7xh2;21 - 01;21;1;25-08-25;25-07-04;7;2004;25-07-22;M;Algérie;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+95;W18ECb1AV9s;20 - 07;20;7;25-08-25;25-01-05;1;2005;25-01-23;M;Luxembourg;Luxembourg;LU,DE;1;1;;;;;Soleuvre;;;;;;;;;;;;;;;;;;;;;;majorité ;
+96;VdmeUwXoxjU;16 - 02;16;2;25-08-25;25-06-09;6;2009;25-06-27;M;Luxembourg;Luxembourg;LU,DE,FR,EN;1;1;1;;1;;Helperknapp;;;;;;;;;;;;;;;;;;;;;;mesure ;
+97;ie1ZdJGOWxo;18 - 08;18;8;25-08-25;25-12-06;12;2006;25-12-24;M;Luxembourg;Luxembourg;LU,DE,FR,PT;1;1;1;1;;;Diekirch;;;;;;;;;;;;;;;;;;;;;; ;majorité
+98;mqYoqxfp3zg;18 - 02;18;2;25-08-25;25-06-07;6;2007;25-06-25;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+99;jCieuJZkwqY;21 - 08;21;8;25-08-25;25-12-03;12;2003;25-12-21;M;Syrie;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+100;PbxTni4hI8o;21 - 07;21;7;25-08-25;25-01-04;1;2004;25-01-22;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+101;oWwAmagEwlA;19 - 11;19;11;25-08-25;25-09-05;9;2005;25-09-23;F;Italie;EU (ohne Lux);;;;;;;;Wiltz;;;;;;;;;;;;;;;;;;;;;;majorité ;
+102;x9GGheIeMTI;21 - 10;21;10;25-08-25;25-10-03;10;2003;25-10-21;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+103;9drExRYbexo;19 - 00;19;0;25-08-25;25-08-06;8;2006;25-08-24;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Junglinster;;;;;;;;;;;;;;;;;;;;;;majorité ;
+104;ykMFlUhikGk;13 - 01;13;1;25-08-25;25-07-12;7;2012;25-07-30;M;Luxembourg;Luxembourg;;;;;;;;Esch-sur-Alzette;;;;;;;;;;;;;;;;;;;;;;mesure ;
+105;4dG2N00NFuM;16 - 09;16;9;25-08-25;25-11-08;11;2008;25-11-26;M;Luxembourg;Luxembourg;LU,FR;1;;1;;;;Dudelange;;1;;;;;;1;;;1;;;;;;;;;;; ;
+106;ylMavhs7RXx;21 - 02;21;2;25-08-25;25-06-04;6;2004;25-06-22;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+107;EadGxPJhJ7M;22 - 02;22;2;25-08-25;25-06-03;6;2003;25-06-21;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+108;WYcil5PIr6o;20 - 09;20;9;25-08-25;25-11-04;11;2004;25-11-22;M;Luxembourg, Italie;keine eindeutige Angabe;LU,DE,FR;1;1;1;;;;Kayl;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+109;XK4pqlbrEdA;17 - 09;17;9;25-08-25;25-11-07;11;2007;25-11-25;M;Slovénie;EU (ohne Lux);;;;;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+110;Tk1MZYEueC2;17 - 07;17;7;25-08-25;25-01-08;1;2008;25-01-26;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Dudelange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+111;CdB75ZLVLOA;20 - 00;20;0;25-08-25;25-08-05;8;2005;25-08-23;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+112;Ip5r8XdeMa2;16 - 02;16;2;25-08-25;25-06-09;6;2009;25-06-27;M;Portugal, Luxembourg;keine eindeutige Angabe;LU,DE,FR,PT;1;1;1;1;;;Vichten;;;;;;;;1;;;;1;1;;;;;;;;; ;
+113;OeREDuctBDw;14 - 08;14;8;25-08-25;25-12-10;12;2010;25-12-28;M;Syrie;Nicht-EU;FR,SY;;;1;;;1;Liefrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+114;ZUb7nFBNavM;19 - 00;19;0;25-08-25;25-08-06;8;2006;25-08-24;M;;Nicht-EU;LU,DE,FR,EN;1;1;1;;1;;Esch-sur-Alzette;;;;;;;;;;;;;;;;;;;;;;majorité ;
+115;AeMbumlxiHA;20 - 02;20;2;25-08-25;25-06-05;6;2005;25-06-23;M;France;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+116;GePkYnSbnAE;19 - 02;19;2;25-08-25;25-06-06;6;2006;25-06-24;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+117;JkN8TsLawbx;19 - 11;19;11;25-08-25;25-09-05;9;2005;25-09-23;M;France;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+118;DZVeQ9xRatE;12 - 07;12;7;25-08-25;25-01-13;1;2013;25-01-31;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Keispelt;;;;;;;;;;;;;;;;;;;;;;mesure ;
+119;KWNcxu81fio;22 - 01;22;1;25-08-25;25-07-03;7;2003;25-07-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+120;o0zPxQdnT4k;21 - 09;21;9;25-08-25;25-11-03;11;2003;25-11-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+121;92nNFs3kxPs;22 - 04;22;4;25-08-25;25-04-03;4;2003;25-04-21;F;Roumanie;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+122;ghde8TmviTo;16 - 07;16;7;25-08-25;25-01-09;1;2009;25-01-27;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+123;qowUefMmVFw;22 - 02;22;2;25-08-25;25-06-03;6;2003;25-06-21;F;Portugal;EU (ohne Lux);FR,PT;;;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+124;3MgSHmX4H3U;19 - 11;19;11;25-08-25;25-09-05;9;2005;25-09-23;M;Algérie;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+125;1clZamyGxRx;13 - 02;13;2;25-08-25;25-06-12;6;2012;25-06-30;M;Maroc;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+126;cHFUq47ekEI;21 - 11;21;11;25-08-25;25-09-03;9;2003;25-09-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+127;INCVRzFBqgU;20 - 09;20;9;25-08-25;25-11-04;11;2004;25-11-22;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+128;k6KxYWwnx1o;16 - 01;16;1;25-08-25;25-07-09;7;2009;25-07-27;M;Erythrée;Nicht-EU;LU,DE,FR;1;1;1;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;
+129;BSp7HHIBF5s;19 - 01;19;1;25-08-25;25-07-06;7;2006;25-07-24;F;Luxembourg;Luxembourg;LU,DE;1;1;;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+130;irToOjjbIuE;19 - 07;19;7;25-08-25;25-01-06;1;2006;25-01-24;M;Royaume-Uni;Nicht-EU;LU,DE,FR;1;1;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;; ;majorité
+131;qToyvZ6gLr6;21 - 11;21;11;25-08-25;25-09-03;9;2003;25-09-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+132;mI9pWU5Tssx;16 - 03;16;3;25-08-25;25-05-09;5;2009;25-05-27;M;Allemagne, Algérie;keine eindeutige Angabe;LU,DE,FR,EN;1;1;1;;1;;Schuttrange;;1;1;;;;;;;;;1;;;;;;;;;; ;
+133;veJDJUa5Ook;21 - 06;21;6;25-08-25;25-02-04;2;2004;25-02-22;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+134;CR9GS4WXfPY;21 - 05;21;5;25-08-25;25-03-04;3;2004;25-03-22;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+135;lb4mGrHR5YY;19 - 00;19;0;25-08-25;25-08-06;8;2006;25-08-24;F;Luxembourg;Luxembourg;LU;1;;;;;;Junglinster;;;;;;;;;;;;;;;;;;;;;;majorité ;
+136;8sPJUIPsxNk;21 - 04;21;4;25-08-25;25-04-04;4;2004;25-04-22;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+137;xYpZoCIPmsE;20 - 10;20;10;25-08-25;25-10-04;10;2004;25-10-22;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+138;b5B9FvjPYWM;18 - 00;18;0;25-08-25;25-08-07;8;2007;25-08-25;F;Luxembourg, Bosnie-Herzégovine;keine eindeutige Angabe;;;;;;;;Differdange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+139;rvIx8eMn0xI;21 - 02;21;2;25-08-25;25-06-04;6;2004;25-06-22;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;mesure
+140;1bDRspkxuPk;15 - 09;15;9;25-08-25;25-11-09;11;2009;25-11-27;M;Luxembourg;Luxembourg;LU,DE,FR,PT,EN;1;1;1;1;1;;Beckerich;;;1;;1;;;1;;;;;;;;;;;;;;mesure ;
+141;E3u4xtQQKEE;19 - 08;19;8;25-08-25;25-12-05;12;2005;25-12-23;M;Maroc;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+142;74xJLNJUFoc;18 - 10;18;10;25-08-25;25-10-06;10;2006;25-10-24;M;Espagne;EU (ohne Lux);FR;;;1;;;;Hesperange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+143;3FP7P1VwDc6;22 - 02;22;2;25-08-25;25-06-03;6;2003;25-06-21;M;Algérie;Nicht-EU;FR;;;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+144;94xZe8xOunI;19 - 11;19;11;25-08-25;25-09-05;9;2005;25-09-23;M;Mali;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+145;FC9KphymgGo;17 - 07;17;7;25-08-25;25-01-08;1;2008;25-01-26;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Tuntange;;;1;;;1;;;;;;;;;;;;;;;; ;
+146;GxCYAoDKPJY;18 - 00;18;0;25-08-25;25-08-07;8;2007;25-08-25;F;Luxembourg, ;keine eindeutige Angabe;;;;;;;;Junglinster;;;;;;;;;;;;;;;;;;;;;;mesure ;
+147;oI2pQH9BD2E;22 - 04;22;4;25-08-25;25-04-03;4;2003;25-04-21;M;;NA;LU,FR;1;;1;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+148;YOoukPntleQ;16 - 06;16;6;25-08-25;25-02-09;2;2009;25-02-27;M;Portugal;EU (ohne Lux);LU;1;;;;;;Luxembourg;;;;;;;;;1;;;;;;;;;;;;;mesure ;
+149;Omdb5khXJzE;16 - 08;16;8;25-08-25;25-12-08;12;2008;25-12-26;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+150;DxGkNYart6s;17 - 06;17;6;25-08-25;25-02-08;2;2008;25-02-26;F;République Dominicaine;Nicht-EU;LU,FR,PT;1;;1;1;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;; ;
+151;2MCynFqLkfY;21 - 11;21;11;25-08-25;25-09-03;9;2003;25-09-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+152;pFI5CMlG1eA;19 - 05;19;5;25-08-25;25-03-06;3;2006;25-03-24;M;;NA;;;;;;;;Hagondange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+153;3XPKnOtusqs;20 - 07;20;7;25-08-25;25-01-05;1;2005;25-01-23;M;Portugal;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+154;Ma19DNhVGrA;18 - 04;18;4;25-08-25;25-04-07;4;2007;25-04-25;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+155;BxKqF7uvHO6;18 - 11;18;11;25-08-25;25-09-06;9;2006;25-09-24;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+156;0DrVE19aJaE;20 - 03;20;3;25-08-25;25-05-05;5;2005;25-05-23;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+157;f8HmVgAF6PQ;20 - 02;20;2;25-08-25;25-06-05;6;2005;25-06-23;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Bastogne;;;;;;;;;;;;;;;;;;;;;;majorité ;
+158;40F8A6Vq1O2;21 - 03;21;3;25-08-25;25-05-04;5;2004;25-05-22;F;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+159;wNx62bRnNpE;23 - 05;23;5;25-08-25;25-03-02;3;2002;25-03-20;F;;NA;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+160;U4V8nJFMbZk;21 - 02;21;2;25-08-25;25-06-04;6;2004;25-06-22;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+161;8PaupkliSZc;22 - 03;22;3;25-08-25;25-05-03;5;2003;25-05-21;F;Portugal;EU (ohne Lux);LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+162;3QT4UjNZYqU;21 - 01;21;1;25-08-25;25-07-04;7;2004;25-07-22;M;Brésil;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+163;te8JHJ7GWIU;22 - 10;22;10;25-08-25;25-10-02;10;2002;25-10-20;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+164;snHgH2xtaQY;21 - 11;21;11;25-08-25;25-09-03;9;2003;25-09-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+165;f6iXnCcgM1I;17 - 03;17;3;25-08-25;25-05-08;5;2008;25-05-26;M;Luxembourg;Luxembourg;LU,DE,FR,PT;1;1;1;1;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+166;0ZCDZ3yxuso;21 - 03;21;3;25-08-25;25-05-04;5;2004;25-05-22;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+167;fZK6C4A1lmM;15 - 01;15;1;25-08-25;25-07-10;7;2010;25-07-28;M;Allemagne;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+168;NNSzcm0ssAk;15 - 02;15;2;25-08-25;25-06-10;6;2010;25-06-28;F;Luxembourg;Luxembourg;;;;;;;;Wormeldange;;;;;;;;1;;;;1;1;;;;;;;;;mesure ;mesure
+169;U1hUeqtqpuI;20 - 04;20;4;25-08-25;25-04-05;4;2005;25-04-23;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+170;4l6Jp9bRupM;20 - 00;20;0;25-08-25;25-08-05;8;2005;25-08-23;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+171;r2eGTPRfCXs;18 - 08;18;8;25-08-25;25-12-06;12;2006;25-12-24;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+172;JE4cDXqt9cY;15 - 05;15;5;25-08-25;25-03-10;3;2010;25-03-28;M;Portugal;EU (ohne Lux);FR,PT;;;1;1;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;
+173;sdPZwe0v4yI;22 - 10;22;10;25-08-25;25-10-02;10;2002;25-10-20;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+174;zgaXxmI7QsE;20 - 05;20;5;25-08-25;25-03-05;3;2005;25-03-23;M;Tunisie;Nicht-EU;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+175;Ox9aCNxoq0U;18 - 07;18;7;25-08-25;25-01-07;1;2007;25-01-25;M;France;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+176;LqNjs7aRu2I;13 - 00;13;0;25-08-25;25-08-12;8;2012;25-08-30;M;Serbie-Montenegro;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+177;mOwNafyVERx;16 - 10;16;10;25-08-25;25-10-08;10;2008;25-10-26;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Alzingen;;;1;;;;1;;;;;;;;;;;;;;; ;
+178;cpTxgDYUDFE;20 - 05;20;5;25-08-25;25-03-05;3;2005;25-03-23;M;Algérie;Nicht-EU;DE,FR;;1;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+179;WJkCT1EBLSQ;15 - 10;15;10;25-08-25;25-10-09;10;2009;25-10-27;F;Luxembourg;Luxembourg;LU,FR,PT;1;;1;1;;;Bettendorf;;;;;;;;;;;;;;;;;;;;;;mesure ;
+180;T43vldzysvY;15 - 11;15;11;25-08-25;25-09-09;9;2009;25-09-27;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Bettembourg;;;1;;;1;;;;;;;;;;;;;;;; ;
+181;R89PJNxvhHk;19 - 10;19;10;25-08-25;25-10-05;10;2005;25-10-23;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+182;QXgiohqROrk;19 - 10;19;10;25-08-25;25-10-05;10;2005;25-10-23;M;Luxembourg;Luxembourg;;;;;;;;Bascharage;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+183;n57RZIfpOyQ;13 - 09;13;9;25-08-25;25-11-11;11;2011;25-11-29;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+184;9eXRkc1Qmjc;14 - 08;14;8;25-08-25;25-12-10;12;2010;25-12-28;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Petange;;;1;;;;;;;;;;;;;;;;;;; ;
+185;MBesBM2pf5x;16 - 05;16;5;25-08-25;25-03-09;3;2009;25-03-27;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+186;5GR1lzRjoDM;20 - 10;20;10;25-08-25;25-10-04;10;2004;25-10-22;M;Portugal;EU (ohne Lux);LU,FR,EN,PT;1;;1;1;1;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+187;Cd4hSuJKXY2;20 - 03;20;3;25-08-25;25-05-05;5;2005;25-05-23;M;Maroc;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+188;uer3edmZBsE;18 - 04;18;4;25-08-25;25-04-07;4;2007;25-04-25;F;Portugal;EU (ohne Lux);LU,DE,FR,PT,EN;1;1;1;1;1;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+189;vEKZdoKkzt2;14 - 11;14;11;25-08-25;25-09-10;9;2010;25-09-28;F;Luxembourg;Luxembourg;LU,FR;1;;1;;;;Junglinster;;1;;;;;;;;;;;1;;;;;;;;; ;
+190;79dS6Yhfgdw;19 - 00;19;0;25-08-25;25-08-06;8;2006;25-08-24;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+191;xEJ7IGDxbQc;18 - 07;18;7;25-08-25;25-01-07;1;2007;25-01-25;F;Luxembourg, Portugal;keine eindeutige Angabe;;;;;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;
+192;HPPgTjMjp9M;20 - 05;20;5;25-08-25;25-03-05;3;2005;25-03-23;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+193;XPxvxLVgF8M;17 - 05;17;5;25-08-25;25-03-08;3;2008;25-03-26;M;Algérie;Nicht-EU;FR;;;1;;;;Oran en Algérie ;;;;;;;;;;;;;;;;;;;;;;mesure ;
+194;OioxmEGBP6k;16 - 10;16;10;25-08-25;25-10-08;10;2008;25-10-26;F;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Esch Alzette;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+195;yfG6ghEXd3U;17 - 00;17;0;25-08-25;25-08-08;8;2008;25-08-26;M;;NA;;;;;;;;Sans domicile connu;;;;;;;;;;;;;;;;;;;;;;mesure ;
+196;z46NlrhsYSk;18 - 07;18;7;25-08-25;25-01-07;1;2007;25-01-25;M;Syrie;Nicht-EU;FR,SY;;;1;;;1;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+197;UivwijSoEJU;16 - 01;16;1;25-08-25;25-07-09;7;2009;25-07-27;F;France;EU (ohne Lux);LU,DE,FR;1;1;1;;;;Bettange-sur-Mess;;;;;;;;;;;;;;;;;;;;;;mesure ;
+198;C3d5q4OnJ1Y;15 - 09;15;9;25-08-25;25-11-09;11;2009;25-11-27;M;Luxembourg;Luxembourg;LU,DE,FR,PT,EN;1;1;1;1;1;;Schuttrange;;1;1;;;1;;;;;;1;;;;;;;;;; ;
+199;8Zqxkwykfq6;18 - 11;18;11;25-08-25;25-09-06;9;2006;25-09-24;M;;NA;;;;;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;
+200;KDtWx14HbNk;17 - 04;17;4;25-08-25;25-04-08;4;2008;25-04-26;M;Portugal;EU (ohne Lux);LU,DE,FR;1;1;1;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+201;G2xxmrG1BEo;18 - 00;18;0;25-08-25;25-08-07;8;2007;25-08-25;F;Luxembourg;Luxembourg;LU;1;;;;;;;;1;1;;;;;;;;;;;;;;;;;;;mesure ;majorité
+202;YLrvzkcSHEo;18 - 05;18;5;25-08-25;25-03-07;3;2007;25-03-25;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+203;DyNKf6mz9D6;20 - 02;20;2;25-08-25;25-06-05;6;2005;25-06-23;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Esch-sur-Alzette;;;;;;;;;;;;;;;;;;;;;;mesure ;
+204;l9Lfyd74Jhx;21 - 10;21;10;25-08-25;25-10-03;10;2003;25-10-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+205;hDX9lCsKBxQ;19 - 11;19;11;25-08-25;25-09-05;9;2005;25-09-23;M;;NA;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+206;pf3z6VDAXog;17 - 05;17;5;25-08-25;25-03-08;3;2008;25-03-26;M;Bosnie-Herzégovine;Nicht-EU;PT;;;;1;;;Bruxelles;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+207;fjUj8ylgiXs;15 - 06;15;6;25-08-25;25-02-10;2;2010;25-02-28;M;Ukraine;Nicht-EU;FR,EN;;;1;;1;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+208;fSIB5G80giM;18 - 01;18;1;25-08-25;25-07-07;7;2007;25-07-25;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Contern;;;;;;;;;;;;;;;;;;;;;;mesure ;
+209;N2B5PJml9Wo;19 - 07;19;7;25-08-25;25-01-06;1;2006;25-01-24;F;Portugal, Brésil;keine eindeutige Angabe;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+210;JWOQmUSggyc;20 - 02;20;2;25-08-25;25-06-05;6;2005;25-06-23;M;Algérie;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+211;g8SXCxEVELU;20 - 03;20;3;25-08-25;25-05-05;5;2005;25-05-23;M;Luxembourg;Luxembourg;LU,DE,FR,PT;1;1;1;1;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+212;pvmr0INdJso;21 - 01;21;1;25-08-25;25-07-04;7;2004;25-07-22;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+213;VsWEYO9DojQ;20 - 03;20;3;25-08-25;25-05-05;5;2005;25-05-23;M;Luxembourg;Luxembourg;;;;;;;;Hellange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+214;E1aQrrM3ZxM;15 - 06;15;6;25-08-25;25-02-10;2;2010;25-02-28;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Junglinster;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+215;djNcmOKTUCw;20 - 04;20;4;25-08-25;25-04-05;4;2005;25-04-23;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+216;esur4DCKmiA;19 - 08;19;8;25-08-25;25-12-05;12;2005;25-12-23;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Longwy;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+217;RzJOx9Huhas;21 - 00;21;0;25-08-25;25-08-04;8;2004;25-08-22;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+218;DfB0EP6qYqE;15 - 03;15;3;25-08-25;25-05-10;5;2010;25-05-28;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+219;hJFTMXVU10Q;21 - 07;21;7;25-08-25;25-01-04;1;2004;25-01-22;M;;NA;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+220;YlR7SB1ilx6;18 - 09;18;9;25-08-25;25-11-06;11;2006;25-11-24;F;Roumanie;EU (ohne Lux);FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+221;UaXtiTubbrM;19 - 05;19;5;25-08-25;25-03-06;3;2006;25-03-24;M;Luxembourg;Luxembourg;LU,DE,FR,EN;1;1;1;;1;;Dudelange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+222;k2NN5dVSHBA;19 - 01;19;1;25-08-25;25-07-06;7;2006;25-07-24;M;Portugal;EU (ohne Lux);LU,DE,FR,EN,PT;1;1;1;1;1;;Garnich;;;;;;;;;;;;;;;;;;;;;;mesure ;
+223;yRDXOzLFToU;19 - 09;19;9;25-08-25;25-11-05;11;2005;25-11-23;M;Russie;Nicht-EU;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+224;vJRd21cZkKk;17 - 06;17;6;25-08-25;25-02-08;2;2008;25-02-26;M;Iraq;Nicht-EU;FR;;;1;;;;Kiischpelt;;;;;;;;;;;;;;;;;;;;;;mesure ;
+225;9xRuFf4Gly2;18 - 10;18;10;25-08-25;25-10-06;10;2006;25-10-24;F;Iran;Nicht-EU;;;;;;;;Luxembourg;;;1;;1;;;;;;;;1;;;;;;;;;mesure ;mesure
+226;gDwTo4kAXN2;22 - 03;22;3;25-08-25;25-05-03;5;2003;25-05-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+227;DjzO1vmEXGg;16 - 05;16;5;25-08-25;25-03-09;3;2009;25-03-27;M;Portugal;EU (ohne Lux);PT;;;;1;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+228;BL94vOyfz5Q;18 - 09;18;9;25-08-25;25-11-06;11;2006;25-11-24;M;Iraq, Luxembourg;keine eindeutige Angabe;LU,DE,FR,EN;1;1;1;;1;;Wiltz;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+229;xDPzL6CxIq6;18 - 03;18;3;25-08-25;25-05-07;5;2007;25-05-25;M;Portugal;EU (ohne Lux);;;;;;;;Differdange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+230;DCXBnTsnWQA;22 - 00;22;0;25-08-25;25-08-03;8;2003;25-08-21;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+231;OGo0U4cHwf6;16 - 11;16;11;25-08-25;25-09-08;9;2008;25-09-26;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;; ;
+232;XtoixSEQ6Pw;17 - 11;17;11;25-08-25;25-09-07;9;2007;25-09-25;F;;NA;;;;;;;;;;;;;;;;;1;;;;;;;;;;;;; ;
+233;hj0Z2GKI5sE;18 - 00;18;0;25-08-25;25-08-07;8;2007;25-08-25;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+234;BvMAxrqX6tI;20 - 00;20;0;25-08-25;25-08-05;8;2005;25-08-23;M;Espagne;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+235;DVvGK3oCtaA;20 - 06;20;6;25-08-25;25-02-05;2;2005;25-02-23;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+236;epxxxK8h202;21 - 02;21;2;25-08-25;25-06-04;6;2004;25-06-22;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Rumelange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+237;nAVhsapriXs;20 - 04;20;4;25-08-25;25-04-05;4;2005;25-04-23;M;Portugal;EU (ohne Lux);FR,PT;;;1;1;;;Remich;;;;;;;;;;;;;;;;;;;;;;majorité ;
+238;s7llJOzZqzg;16 - 01;16;1;25-08-25;25-07-09;7;2009;25-07-27;M;Chine;Nicht-EU;LU,DE,FR,EN;1;1;1;;1;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+239;tmVUDARLiUw;19 - 01;19;1;25-08-25;25-07-06;7;2006;25-07-24;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+240;BGnfO3Cbd3w;18 - 01;18;1;25-08-25;25-07-07;7;2007;25-07-25;M;France;EU (ohne Lux);LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;; ;
+241;Xk4mpwPKYxQ;17 - 09;17;9;25-08-25;25-11-07;11;2007;25-11-25;M;Maroc;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+242;jCuwgfcJGVI;17 - 11;17;11;25-08-25;25-09-07;9;2007;25-09-25;M;Luxembourg;Luxembourg;;;;;;;;Differdange;;;;;;;;;;;;;;;;;;;;;; ;
+243;MIp2ivTEFyY;12 - 02;12;2;25-08-25;25-06-13;6;2013;25-06-31;F;Guinée-Bissau;Nicht-EU;;;;;;;;Esch-sur-Alzette;;;;;;;;;;;;;;;;;;;;;;mesure ;
+244;zbPiILN16uY;16 - 01;16;1;25-08-25;25-07-09;7;2009;25-07-27;F;Luxembourg;Luxembourg;;;;;;;;;;;1;;;;;;;;;;;;;;;;;;;mesure ;
+245;qEgxgUC9N02;20 - 04;20;4;25-08-25;25-04-05;4;2005;25-04-23;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+246;6IzrwoG8tfg;15 - 09;15;9;25-08-25;25-11-09;11;2009;25-11-27;M;Luxembourg;Luxembourg;LU,DE,FR,EN;1;1;1;;1;;Hesperange;;;;;;;1;;;;;;;;;;;;;;;mesure ;
+247;EFiNtJTbxOg;21 - 06;21;6;25-08-25;25-02-04;2;2004;25-02-22;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;majorité ;
+248;pRR9pGxrMXQ;19 - 05;19;5;25-08-25;25-03-06;3;2006;25-03-24;M;Algérie;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+249;mfXNxAgdhUY;15 - 04;15;4;25-08-25;25-04-10;4;2010;25-04-28;M;;NA;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+250;L8xoHhN7G8s;16 - 09;16;9;25-08-25;25-11-08;11;2008;25-11-26;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+251;zSpncETNEfM;16 - 11;16;11;25-08-25;25-09-08;9;2008;25-09-26;M;Luxembourg;Luxembourg;;;;;;;;Bridel;;;1;;;1;;;;;;1;;;;;;;;;considéré inatteignable par les mesures classiques; considéré inatteignable par les mesures classiques;
+252;O6DakiGI5bs;16 - 07;16;7;25-08-25;25-01-09;1;2009;25-01-27;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Differdange;;1;1;1;;;;;;;;1;;;;;;;;;; ;
+253;7Bz5eORL9mM;21 - 04;21;4;25-08-25;25-04-04;4;2004;25-04-22;M;Maroc;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+254;qrc5VfTVNEx;20 - 00;20;0;25-08-25;25-08-05;8;2005;25-08-23;M;Roumanie;EU (ohne Lux);FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+255;pdLgFQ5CQ72;19 - 02;19;2;25-08-25;25-06-06;6;2006;25-06-24;M;Luxembourg;Luxembourg;;;;;;;;Bettembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+256;cmXg1THUYu2;17 - 08;17;8;25-08-25;25-12-07;12;2007;25-12-25;M;France;EU (ohne Lux);FR,EN;;;1;;1;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+257;49s7oX55Gh2;15 - 05;15;5;25-08-25;25-03-10;3;2010;25-03-28;M;Portugal;EU (ohne Lux);FR,PT;;;1;1;;;Sanem;;;;;;;;;;;;;;;;;;;;;;mesure ;
+258;AfaQyrzGcwo;16 - 09;16;9;25-08-25;25-11-08;11;2008;25-11-26;M;Brésil;Nicht-EU;LU,FR,PT;1;;1;1;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+259;z85taxzE03k;22 - 07;22;7;25-08-25;25-01-03;1;2003;25-01-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+260;CpVGmoO99Zx;16 - 04;16;4;25-08-25;25-04-09;4;2009;25-04-27;F;Colombie;Nicht-EU;FR;;;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+261;rDgYnvULDGY;18 - 08;18;8;25-08-25;25-12-06;12;2006;25-12-24;M;Luxembourg;Luxembourg;LU,FR;1;;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+262;j4M4Vx0OOYI;20 - 03;20;3;25-08-25;25-05-05;5;2005;25-05-23;M;Brésil;Nicht-EU;FR,PT;;;1;1;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+263;6WHOutyz7Zg;19 - 06;19;6;25-08-25;25-02-06;2;2006;25-02-24;M;Luxembourg;Luxembourg;LU,DE,FR,EN;1;1;1;;1;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+264;xMbPTYvDB72;19 - 02;19;2;25-08-25;25-06-06;6;2006;25-06-24;M;Portugal;EU (ohne Lux);FR,PT;;;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+265;tnJRTd5H7kx;19 - 11;19;11;25-08-25;25-09-05;9;2005;25-09-23;M;Luxembourg;Luxembourg;LU,FR;1;;1;;;;Tandel;;;;;;;;;;;;;;;;;;;;;;mesure ;
+266;pbaUF42xK1Y;22 - 06;22;6;25-08-25;25-02-03;2;2003;25-02-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+267;qEluWlsFpxA;14 - 09;14;9;25-08-25;25-11-10;11;2010;25-11-28;M;France;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+268;KRgryxSiuLw;21 - 06;21;6;25-08-25;25-02-04;2;2004;25-02-22;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+269;4J1ZQxrblXs;16 - 01;16;1;25-08-25;25-07-09;7;2009;25-07-27;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+270;agcxxWNrxow;18 - 10;18;10;25-08-25;25-10-06;10;2006;25-10-24;M;Luxembourg;Luxembourg;;;;;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+271;WJ9tVMz9mUE;16 - 10;16;10;25-08-25;25-10-08;10;2008;25-10-26;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Junglinster;;;;;;;;;;;;;;;;;;;;;;mesure ;
+272;bFa5pY85QsE;14 - 02;14;2;25-08-25;25-06-11;6;2011;25-06-29;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+273;esZ53OP7hPk;22 - 02;22;2;25-08-25;25-06-03;6;2003;25-06-21;M;Luxembourg;Luxembourg;LU,DE,FR,EN;1;1;1;;1;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+274;12NgbiiSxGo;20 - 03;20;3;25-08-25;25-05-05;5;2005;25-05-23;M;Croatie;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+275;qgXNtAEahVU;21 - 01;21;1;25-08-25;25-07-04;7;2004;25-07-22;M;Portugal;EU (ohne Lux);LU,DE,FR,EN,PT;1;1;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+276;7MIoAknlQVU;16 - 00;16;0;25-08-25;25-08-09;8;2009;25-08-27;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+277;ulujTXtUY8Y;22 - 00;22;0;25-08-25;25-08-03;8;2003;25-08-21;F;Roumanie;EU (ohne Lux);FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+278;j3b6SRwfPQs;19 - 08;19;8;25-08-25;25-12-05;12;2005;25-12-23;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+279;xWGkcxZ3xrA;16 - 07;16;7;25-08-25;25-01-09;1;2009;25-01-27;NA;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+280;PpwLpK25NFo;22 - 07;22;7;25-08-25;25-01-03;1;2003;25-01-21;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;majorité
+281;yiJdEyLwUmI;15 - 11;15;11;25-08-25;25-09-09;9;2009;25-09-27;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;1;;;;;;;;mesure ;
+282;AdPdrx7xKEs;18 - 01;18;1;25-08-25;25-07-07;7;2007;25-07-25;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+283;VmfUmEdQyXU;17 - 06;17;6;25-08-25;25-02-08;2;2008;25-02-26;M;Luxembourg;Luxembourg;LU,DE,FR,PT,EN;1;1;1;1;1;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;
+284;kwnwExu4UgI;21 - 04;21;4;25-08-25;25-04-04;4;2004;25-04-22;F;France;EU (ohne Lux);LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+285;nu1UuFZwD6A;16 - 08;16;8;25-08-25;25-12-08;12;2008;25-12-26;F;;NA;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;; ;
+286;U8LK1x8ymLA;17 - 02;17;2;25-08-25;25-06-08;6;2008;25-06-26;F;Luxembourg;Luxembourg;LU,FR;1;;1;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;; ;
+287;Tv928R3d9l6;22 - 00;22;0;25-08-25;25-08-03;8;2003;25-08-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+288;OyBxaEBKk8I;18 - 09;18;9;25-08-25;25-11-06;11;2006;25-11-24;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+289;eLrxgHQVRtY;20 - 05;20;5;25-08-25;25-03-05;3;2005;25-03-23;F;Italie;EU (ohne Lux);LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+290;55R8GG7esY6;19 - 09;19;9;25-08-25;25-11-05;11;2005;25-11-23;M;Maroc;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+291;2JEqlmRGIZo;20 - 11;20;11;25-08-25;25-09-04;9;2004;25-09-22;M;Portugal;EU (ohne Lux);;;;;;;;Esch/Alzette;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+292;jpJqeYs8wx2;16 - 04;16;4;25-08-25;25-04-09;4;2009;25-04-27;F;Luxembourg;Luxembourg;;;;;;;;Differdange;;;;;;;;;;;;;;;;;;;;;; ;
+293;J0YQE2ALtQ6;17 - 11;17;11;25-08-25;25-09-07;9;2007;25-09-25;M;Roumanie;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+294;djgu5JHwCtc;20 - 04;20;4;25-08-25;25-04-05;4;2005;25-04-23;M;Algérie;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+295;Jb7BYSPSP1A;16 - 09;16;9;25-08-25;25-11-08;11;2008;25-11-26;M;Luxembourg;Luxembourg;LU,DE,FR,PT;1;1;1;1;;;Schuttrange;;;;;;1;;;;;;1;1;;;;;;;;; ;
+296;qAhKD6pzW4A;21 - 05;21;5;25-08-25;25-03-04;3;2004;25-03-22;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+297;mCaSINacSKQ;19 - 02;19;2;25-08-25;25-06-06;6;2006;25-06-24;F;Luxembourg;Luxembourg;LU,DE,FR,EN;1;1;1;;1;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+298;TEMx8mzN6mE;21 - 06;21;6;25-08-25;25-02-04;2;2004;25-02-22;M;Portugal;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+299;y7StxphmFVY;17 - 00;17;0;25-08-25;25-08-08;8;2008;25-08-26;M;Belgique;EU (ohne Lux);LU,FR;1;;1;;;;Wormeldange;;1;1;;1;;;;;;;1;1;1;;;;;;;; ;
+300;gLOF0GNUIN2;17 - 07;17;7;25-08-25;25-01-08;1;2008;25-01-26;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Wormeldange;;;;;;;;;;;;1;;;;;;;;;; ;
+301;u5HDevD0rWw;19 - 05;19;5;25-08-25;25-03-06;3;2006;25-03-24;M;Espagne;EU (ohne Lux);LU,FR,PT;1;;1;1;;;Schieren;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+302;dNXqnRQTJ7U;16 - 02;16;2;25-08-25;25-06-09;6;2009;25-06-27;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Rambrouch;;;;;;;;;;;;;;;;;;;;;;mesure ;
+303;jatbvkUjCkY;19 - 08;19;8;25-08-25;25-12-05;12;2005;25-12-23;M;Luxembourg;Luxembourg;;;;;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+304;HbSK9A3SY2s;19 - 00;19;0;25-08-25;25-08-06;8;2006;25-08-24;F;Afghanistan;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+305;F7ytwtxCuWA;20 - 00;20;0;25-08-25;25-08-05;8;2005;25-08-23;M;;NA;;;;;;;;;;;;;;;;;;;;;1;;;;;;;;;mesure ;
+306;To7ijIBLalY;15 - 11;15;11;25-08-25;25-09-09;9;2009;25-09-27;M;Luxembourg;Luxembourg;LU,FR;1;;1;;;;Esch/Alzette;;;;;;;;1;;;;;;;;;;;;;situation d'aggression dans la famille; situation d'aggression dans la famille;
+307;FHm0pH0zJ4g;19 - 05;19;5;25-08-25;25-03-06;3;2006;25-03-24;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+308;03ungo2Fbfo;17 - 11;17;11;25-08-25;25-09-07;9;2007;25-09-25;M;Ethiopie;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+309;leW1rnY2osY;18 - 07;18;7;25-08-25;25-01-07;1;2007;25-01-25;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+310;1jb9olJxzg2;14 - 03;14;3;25-08-25;25-05-11;5;2011;25-05-29;M;Luxembourg;Luxembourg;LU;1;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+311;T79uz0CxRjY;18 - 02;18;2;25-08-25;25-06-07;6;2007;25-06-25;M;Brésil;Nicht-EU;LU,FR,PT;1;;1;1;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+312;xhJmGcU5QlU;17 - 05;17;5;25-08-25;25-03-08;3;2008;25-03-26;F;Luxembourg;Luxembourg;;;;;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+313;7mDPS3wx6V2;22 - 07;22;7;25-08-25;25-01-03;1;2003;25-01-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+314;YxiohJqcjvA;17 - 06;17;6;25-08-25;25-02-08;2;2008;25-02-26;M;Algérie;Nicht-EU;DE,FR;;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+315;99h1WQHNGqw;14 - 11;14;11;25-08-25;25-09-10;9;2010;25-09-28;M;Maroc;Nicht-EU;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+316;U5DhyGFonFk;17 - 09;17;9;25-08-25;25-11-07;11;2007;25-11-25;M;France;EU (ohne Lux);LU,DE,FR;1;1;1;;;;Mondorf-les-Bains;;;;;;;1;;;;;;;;;;;;;;; ;
+317;dwUKSLyaYPU;20 - 06;20;6;25-08-25;25-02-05;2;2005;25-02-23;F;Luxembourg;Luxembourg;LU,DE,FR,PT;1;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+318;Gz1wawoB1Hg;20 - 04;20;4;25-08-25;25-04-05;4;2005;25-04-23;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+319;hB9rlOE0dck;17 - 09;17;9;25-08-25;25-11-07;11;2007;25-11-25;M;Syrie;Nicht-EU;FR,EN;;;1;;1;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+320;3XR7iXsAEFg;20 - 06;20;6;25-08-25;25-02-05;2;2005;25-02-23;F;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+321;x7OzADEd6nE;16 - 10;16;10;25-08-25;25-10-08;10;2008;25-10-26;F;Luxembourg;Luxembourg;;;;;;;;Junglinster;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+322;pGAfWssDx6Y;20 - 01;20;1;25-08-25;25-07-05;7;2005;25-07-23;M;;NA;;;;;;;;Couvin;;;;;;;;;;;;;;;;;;;;;;mesure ;
+323;LD9ZqIFEKok;21 - 02;21;2;25-08-25;25-06-04;6;2004;25-06-22;F;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+324;j2BP6DwExpE;16 - 10;16;10;25-08-25;25-10-08;10;2008;25-10-26;F;Luxembourg;Luxembourg;;;;;;;;;;1;1;;;;;;;;;;;;;;;;;;; ;
+325;5DosiXx1tig;19 - 05;19;5;25-08-25;25-03-06;3;2006;25-03-24;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Mertert;;;;;;;;;;;;;;;;;;;;;;mesure ;
+326;86zShShoZwQ;16 - 07;16;7;25-08-25;25-01-09;1;2009;25-01-27;F;Syrie;Nicht-EU;LU,DE,FR,SY;1;1;1;;;1;Junglinster;;;;;;;;;;;;;;;;;;;;;;mesure ;
+327;2ZxbpPFnZmM;17 - 11;17;11;25-08-25;25-09-07;9;2007;25-09-25;F;Portugal;EU (ohne Lux);FR,PT;;;1;1;;;Commune de Bettembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;
+328;3qwaxmTv7z2;22 - 07;22;7;25-08-25;25-01-03;1;2003;25-01-21;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+329;CC2LeKmGMso;20 - 01;20;1;25-08-25;25-07-05;7;2005;25-07-23;M;Luxembourg;Luxembourg;LU,FR;1;;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+330;fgYZuh7N4Tw;20 - 02;20;2;25-08-25;25-06-05;6;2005;25-06-23;M;Luxembourg;Luxembourg;;;;;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+331;llgQ4tijBHM;21 - 11;21;11;25-08-25;25-09-03;9;2003;25-09-21;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+332;rDN88jLR9BY;22 - 01;22;1;25-08-25;25-07-03;7;2003;25-07-21;M;Portugal;EU (ohne Lux);LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+333;ELu3lTlNRNc;17 - 10;17;10;25-08-25;25-10-07;10;2007;25-10-25;M;Roumanie;EU (ohne Lux);FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+334;igeEN2rLRGx;17 - 11;17;11;25-08-25;25-09-07;9;2007;25-09-25;M;Portugal;EU (ohne Lux);LU,DE,FR,PT;1;1;1;1;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+335;HfXbrXtiD3M;17 - 00;17;0;25-08-25;25-08-08;8;2008;25-08-26;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Junglinster;;1;1;;;1;;;;;;1;;;;1;;;;;; ;
+336;CaVwNfV46bg;17 - 08;17;8;25-08-25;25-12-07;12;2007;25-12-25;F;Syrie;Nicht-EU;SY;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+337;b2XehNGowsU;21 - 05;21;5;25-08-25;25-03-04;3;2004;25-03-22;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+338;PTw93nV8VwQ;19 - 09;19;9;25-08-25;25-11-05;11;2005;25-11-23;M;France;EU (ohne Lux);FR;;;1;;;;Dudelange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+339;iEtDBW0UzWU;19 - 10;19;10;25-08-25;25-10-05;10;2005;25-10-23;M;;NA;;;;;;;;Luxembourg;;;;;;;;;;1;;;;;;;;;;;;mesure ;
+340;wrw3xx6eoe2;14 - 08;14;8;25-08-25;25-12-10;12;2010;25-12-28;F;Luxembourg;Luxembourg;LU,DE;1;1;;;;;Junglinster;;1;1;;;1;;;;;;1;1;;1;;;;;;; ;
+341;nfSXxV3yNtQ;17 - 02;17;2;25-08-25;25-06-08;6;2008;25-06-26;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
+342;qShFzysuotI;17 - 00;17;0;25-08-25;25-08-08;8;2008;25-08-26;F;Italie;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+343;c1fwlmo4Qxo;20 - 00;20;0;25-08-25;25-08-05;8;2005;25-08-23;M;Tunisie;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+344;Qi0gISeweDM;20 - 06;20;6;25-08-25;25-02-05;2;2005;25-02-23;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+345;p8DGxvfpS3g;17 - 05;17;5;25-08-25;25-03-08;3;2008;25-03-26;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+346;G6nZaGmQJEA;16 - 01;16;1;25-08-25;25-07-09;7;2009;25-07-27;M;Erythrée;Nicht-EU;FR;;;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+347;wWpDGZxrZzI;17 - 07;17;7;25-08-25;25-01-08;1;2008;25-01-26;M;Syrie;Nicht-EU;EN;;;;;1;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;
+348;cFVPEZ4TRVk;16 - 04;16;4;25-08-25;25-04-09;4;2009;25-04-27;F;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+349;EuLmFLNHlbs;21 - 06;21;6;25-08-25;25-02-04;2;2004;25-02-22;F;Portugal;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
+350;GxP1f0vM3DE;19 - 01;19;1;25-08-25;25-07-06;7;2006;25-07-24;M;Erythrée;Nicht-EU;LU,FR,EN,SY;1;;1;;1;1;Junglinster;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+351;jSGdUWphe0I;22 - 09;22;9;25-08-25;25-11-02;11;2002;25-11-20;M;Libye;Nicht-EU;DE,FR;;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+352;oFrrcpioxyY;18 - 01;18;1;25-08-25;25-07-07;7;2007;25-07-25;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;mesure
+353;DoPUaz4U6xx;19 - 09;19;9;25-08-25;25-11-05;11;2005;25-11-23;M;Luxembourg;Luxembourg;;;;;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+354;O95lDnKf5Uc;23 - 04;23;4;25-08-25;25-04-02;4;2002;25-04-20;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+355;BQhCB0fexdg;22 - 09;22;9;25-08-25;25-11-02;11;2002;25-11-20;M;;NA;LU,DE,FR,PT;1;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+356;bF8eiwE74wM;18 - 02;18;2;25-08-25;25-06-07;6;2007;25-06-25;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Esch/Alzette;;;;;;;;;;;;;;;;;;;;;;mesure ;
+357;pOOrLNIg6xI;18 - 10;18;10;25-08-25;25-10-06;10;2006;25-10-24;M;Luxembourg;Luxembourg;;;;;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;majorité ;
+358;e5ebAFhnP9E;21 - 06;21;6;25-08-25;25-02-04;2;2004;25-02-22;M;Luxembourg;Luxembourg;LU,DE,FR,PT;1;1;1;1;;;Canach;;;;;;;;;;;;;;;;;;;;;;majorité ;
+359;GLq8xTSCowI;21 - 07;21;7;25-08-25;25-01-04;1;2004;25-01-22;F;Portugal;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+360;Jx1WVjp30rk;14 - 06;14;6;25-08-25;25-02-11;2;2011;25-02-29;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Bourglinster;;;;;;;;;;;;1;;;1;;;;;;; ;
+361;fgtRFQxTJl2;20 - 01;20;1;25-08-25;25-07-05;7;2005;25-07-23;M;Portugal;EU (ohne Lux);;;;;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+362;J884shjNdPw;20 - 00;20;0;25-08-25;25-08-05;8;2005;25-08-23;F;Luxembourg;Luxembourg;LU,DE;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+363;NhGkA9r1J8M;22 - 04;22;4;25-08-25;25-04-03;4;2003;25-04-21;M;;NA;;;;;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+364;akfAFhHh8zw;22 - 10;22;10;25-08-25;25-10-02;10;2002;25-10-20;M;Cameroun;Nicht-EU;FR;;;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+365;InyPMFYExio;22 - 11;22;11;25-08-25;25-09-02;9;2002;25-09-20;F;Roumanie;EU (ohne Lux);LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+366;0cjDrkjZ6sM;22 - 05;22;5;25-08-25;25-03-03;3;2003;25-03-21;M;Portugal;EU (ohne Lux);;;;;;;;Differdange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+367;7iEQ6lhRg3k;22 - 03;22;3;25-08-25;25-05-03;5;2003;25-05-21;M;;NA;;;;;;;;Wasserbillig;;;;;;;;;;;;;;;;;;;;;;majorité ;
+368;pCxioLz7weE;21 - 02;21;2;25-08-25;25-06-04;6;2004;25-06-22;M;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Steinheim;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+369;fWc1drMStmg;23 - 07;23;7;25-08-25;25-01-02;1;2002;25-01-20;M;Portugal;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+370;TeegL85MpXM;22 - 03;22;3;25-08-25;25-05-03;5;2003;25-05-21;M;;NA;;;;;;;;Canach;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+371;6FGZlumBs4I;22 - 11;22;11;25-08-25;25-09-02;9;2002;25-09-20;M;Luxembourg;Luxembourg;;;;;;;;Esch/Alzette;;;;;;;;;;;;;;;;;;;;;;majorité ;
+372;dW0pxlJtVhI;23 - 02;23;2;25-08-25;25-06-02;6;2002;25-06-20;M;Luxembourg;Luxembourg;;;;;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+373;jGvUP5x0FNI;22 - 11;22;11;25-08-25;25-09-02;9;2002;25-09-20;M;Portugal;EU (ohne Lux);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+374;2FGgU4qtXBE;22 - 05;22;5;25-08-25;25-03-03;3;2003;25-03-21;M;Portugal;EU (ohne Lux);LU,FR;1;;1;;;;Esch-sur-Alzette;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+375;PKiv46gbAW6;21 - 03;21;3;25-08-25;25-05-04;5;2004;25-05-22;M;Azerbaïdjan;Nicht-EU;EN;;;;;1;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+376;yOUiIgkHWCc;21 - 08;21;8;25-08-25;25-12-03;12;2003;25-12-21;M;Luxembourg;Luxembourg;;;;;;;;Steinsel;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+377;mtx94oKPFQk;21 - 01;21;1;25-08-25;25-07-04;7;2004;25-07-22;M;Luxembourg;Luxembourg;;;;;;;;Esch-sur-Alzette;;;;;;;;;;;;;;;;;;;;;;majorité ;
+378;NbjIe7yZ652;22 - 07;22;7;25-08-25;25-01-03;1;2003;25-01-21;M;Portugal;EU (ohne Lux);LU,FR;1;;1;;;;Wormeldange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+379;tEyQoCd7VeM;22 - 08;22;8;25-08-25;25-12-02;12;2002;25-12-20;M;Portugal;EU (ohne Lux);LU;1;;;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;majorité ;
+380;dSWmeeZirQY;23 - 05;23;5;25-08-25;25-03-02;3;2002;25-03-20;M;;NA;;;;;;;;Hosingen;;;;;;;;;;;;;;;;;;;;;;majorité ;
+381;XZx1x0AA2SQ;22 - 09;22;9;25-08-25;25-11-02;11;2002;25-11-20;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;
+382;cQff2xZL24c;22 - 10;22;10;25-08-25;25-10-02;10;2002;25-10-20;M;Thaïlande;Nicht-EU;;;;;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+383;TYNkuGdQaxo;21 - 09;21;9;25-08-25;25-11-03;11;2003;25-11-21;M;;NA;;;;;;;;Dudelange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+384;wVIgLq2H9ZE;22 - 10;22;10;25-08-25;25-10-02;10;2002;25-10-20;M;;NA;LU;1;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+385;xATqMEwHGaE;21 - 06;21;6;25-08-25;25-02-04;2;2004;25-02-22;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+386;lK1e8aF0NWx;22 - 00;22;0;25-08-25;25-08-03;8;2003;25-08-21;M;;NA;LU,DE,FR,EN;1;1;1;;1;;Weiler-la-Tour;;;;;;;;;;;;;;;;;;;;;;majorité ;
+387;LaNdISWQLkx;21 - 07;21;7;25-08-25;25-01-04;1;2004;25-01-22;M;Luxembourg;Luxembourg;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+388;jGeDCJc415k;22 - 08;22;8;25-08-25;25-12-02;12;2002;25-12-20;M;;NA;;;;;;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;majorité ;
+389;sAM7JxlnVss;22 - 08;22;8;25-08-25;25-12-02;12;2002;25-12-20;M;Portugal;EU (ohne Lux);;;;;;;;Clervaux;;;;;;;;;;;;;;;;;;;;;;majorité ;
+390;GxTxgLkKDKA;19 - 02;19;2;25-08-25;25-06-06;6;2006;25-06-24;M;Cap-Vert;Nicht-EU;LU,DE,FR,PT;1;1;1;1;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+391;OFeAhWNE0cs;23 - 01;23;1;25-08-25;25-07-02;7;2002;25-07-20;M;Portugal;EU (ohne Lux);LU,FR,PT;1;;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+392;x1tyxU9uNXx;22 - 06;22;6;25-08-25;25-02-03;2;2003;25-02-21;F;Luxembourg;Luxembourg;LU,FR;1;;1;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+393;x9k3AuN6z5k;21 - 05;21;5;25-08-25;25-03-04;3;2004;25-03-22;F;Portugal;EU (ohne Lux);LU,FR,PT;1;;1;1;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+394;I6zvlAJey8Y;22 - 00;22;0;25-08-25;25-08-03;8;2003;25-08-21;F;;NA;LU,DE,FR;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+395;dPxgHIKDlkM;21 - 00;21;0;25-08-25;25-08-04;8;2004;25-08-22;F;Luxembourg;Luxembourg;LU,DE,FR;1;1;1;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+396;OWl700oSYnY;23 - 02;23;2;25-08-25;25-06-02;6;2002;25-06-20;F;Luxembourg;Luxembourg;LU,DE;1;1;;;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
+397;qYzQX62NdHM;20 - 09;20;9;25-08-25;25-11-04;11;2004;25-11-22;M;Portugal;EU (ohne Lux);LU,FR,PT;1;;1;1;;;Esch-sur-Alzette;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+398;XSAxdrvNppk;22 - 00;22;0;25-08-25;25-08-03;8;2003;25-08-21;M;Luxembourg;Luxembourg;LU,DE;1;1;;;;;Schuttrange;;;;;;;;;;;;;;;;;;;;;;majorité ;
+399;cScBm5ISE2k;23 - 04;23;4;25-08-25;25-04-02;4;2002;25-04-20;M;;NA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+400;xXG2O4UWlxo;19 - 07;19;7;25-08-25;25-01-06;1;2006;25-01-24;M;Cap-Vert;Nicht-EU;LU,FR,PT;1;;1;1;;;Luxembourg;;;;;;;;;;;;;;;;;;;;;;mesure ;majorité
+401;BgV4bvKRwBQ;22 - 07;22;7;25-08-25;25-01-03;1;2003;25-01-21;M;Luxembourg;Luxembourg;LU,DE,FR,PT;1;1;1;1;;;;;;;;;;;;;;;;;;;;;;;;;majorité ;
