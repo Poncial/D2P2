@@ -2,9 +2,11 @@
 title: "D2P2_motherScript"
 author: "Alexandre Poncin"
 format: html
-editor: visual
+editor: source
 ---
+
 ## 1. Chargement des packages ----
+
 ```{r Chargement des Packages, include=FALSE}
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(
@@ -24,22 +26,16 @@ pacman::p_load(
 ```
 
 ## 2. Chargement des fonctions ----
+
 ```{r}
 # Fonctions de recodage de strings
 source(here("04_functions", "funRecodeAndVerifyBin.R"))
-source(here("04_functions", "funRecodeAndVerifyNum.R"))
+
 
 # Fonctions utilitaires
 source(here("04_functions", "funRunScript.R"))
-source(here("04_functions", "funExtractLabels.R"))
-source(here("04_functions", "funCleanTextCols.R"))
-source(here("04_functions", "funRvbToHex.R"))
-source(here("04_functions", "funComputeGroupedItemSummary.R"))
-`%notIn%` <- Negate(`%in%`)
+
 
 # Fonctions de visualisation
-source(here("04_functions", "funCreateAndSaveGroupedBarPlots.R"))
-source(here("04_functions", "funPercentBarGraphs.R"))
-source(here("04_functions", "funBinaryBarGraph.R"))
-source(here("04_functions", "funHeatmap.R"))
+
 ```
