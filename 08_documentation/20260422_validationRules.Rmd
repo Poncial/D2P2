@@ -1,0 +1,2682 @@
+---
+title: "20260422_validationRules"
+author: "Alexandre Poncin"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+## 1. Mon avis sur les règles de validation
+
+Tes règles sont **globalement excellentes** et couvrent l'essentiel. Voici mon analyse critique par section :
+
+### ✅ Points forts
+
+| Section | Commentaire |
+|------------------------------|------------------------------------------|
+| 1–2 (générales + individus) | Solides, bien pensées |
+| 5 (temporelle) | Particulièrement importante pour toi — les chevauchements autorisés fugue/séjour sont bien identifiés |
+| 10 (trajectoires) | Très pertinente, rare dans ce type de document |
+| 12 (gouvernance) | Indispensable pour la reproductibilité |
+
+### ⚠️ Points à préciser pour ton contexte
+
+**Règle 2.8 — Âge plausible à l'admission** Définis explicitement la borne : dans ton cas, probablement **12–17 ans** (mineurs, population CSEE). À documenter comme paramètre.
+
+**Règle 3.8 — Rang continu sans saut** Attention : dans tes données, le rang est calculé **par type d'événement** (`Séjour 1`, `Séjour 2`, `Fugue 1`, etc.) et non globalement. La règle doit préciser le niveau de continuité attendu.
+
+**Règle 5.5 — Chevauchements séjours** À nuancer : dans tes données, `Séjour 1` et `Fugue 1` se chevauchent par construction. Il faut définir que les **séjours entre eux** ne se chevauchent pas, mais que fugues et congés peuvent s'imbriquer dans un séjour.
+
+**Règle 6.6 — Sortie pour majorité** Très pertinente pour toi — tu as `dateMajorite` dans les deux tables. À implémenter avec une tolérance de ±7 jours (délais administratifs possibles).
+
+**Règle manquante — Censure** Ajouter une règle explicite : *les épisodes sans date de fin doivent être identifiés comme "en cours" ou "censurés à la majorité"*, pas comme des erreurs.
+
+------------------------------------------------------------------------
+
+## 2. Modèle en étoile — Oui, absolument
+
+Voici pourquoi et comment :
+
+### Structure proposée
+
+```         
+                    ┌─────────────────┐
+                    │   dim_jeune     │  ← table profil nettoyée
+                    │  (1 ligne/jeune)│
+                    │  PK: id         │
+                    └────────┬────────┘
+                             │ 1
+                             │
+                             │ N
+                    ┌────────┴────────┐
+                    │  fact_episode   │  ← table trajectoire nettoyée
+                    │ (1 ligne/épisode│
+                    │  PK: episodeId  │
+                    │  FK: id         │
+                    │  FK: structureId│
+                    └────────┬────────┘
+                             │ N
+                             │
+                             │ 1
+                    ┌────────┴────────┐
+                    │ dim_structure   │  ← référentiel des unités
+                    │ (1 ligne/unité) │
+                    │  PK: structureId│
+                    └─────────────────┘
+```
+
+### Avantages concrets pour ton projet
+
+| Avantage | Explication |
+|--------------------------------|----------------------------------------|
+| **Validation FK** | Tu peux vérifier que chaque épisode pointe vers un jeune existant |
+| **Pas de redondance** | Les infos du jeune ne sont pas répétées sur chaque ligne d'épisode |
+| **Analyses modulaires** | Tu peux joindre les tables uniquement quand nécessaire |
+| **Gouvernance** | Chaque table a sa propre logique de validation |
+
+------------------------------------------------------------------------
+
+## 3. Implémentation R complète
+
+### Étape 0 — Paramètres globaux
+
+``` r
+# ============================================================
+# Paramètres globaux de validation
+# Auteur : Jean-Eudes Méthodologiste
+# ============================================================
+
+# Tolérance pour cohérence majorité/sortie (jours)
+PARAM_TOLERANCE_MAJORITE <- 30L
+
+# Taux de NA acceptable par variable (seuil d'alerte)
+PARAM_SEUIL_NA           <- 0.30
+
+# Types d'épisodes valides (liste fermée)
+PARAM_TYPES_VALIDES <- c("admission", "sejour", "conge", "fugue", "suivi")
+
+# Structures valides (à compléter avec ton référentiel)
+PARAM_STRUCTURES_VALIDES <- c(
+  "CSEE_X Intensivpadagogische Wohngruppe",
+  "CSEE Unisec",
+  "CSEE_Y Aufnahmegruppe",
+  "CSEE_Z Intensivpadagogische Wohngruppe",
+  "CSEE_Y Studio",
+  "CSEE_Y Intensivpadagogische Wohngruppe",
+  "CSEE_Y semi-autonome Wohngruppe",
+  "CSEE Intensivpadagogische Wohngruppe"
+)
+```
+
+### Étape 1 — Construction du modèle en étoile
+
+``` r
+# ============================================================
+# Construction des 3 tables du modèle en étoile
+# ============================================================
+
+library(data.table)
+
+# --- dim_structure : référentiel des unités de placement ---
+dimStructure <- data.table(
+  structureId   = seq_along(PARAM_STRUCTURES_VALIDES),
+  structureNom  = PARAM_STRUCTURES_VALIDES,
+  # Recodage du niveau de restrictivité (à adapter selon expertise métier)
+  niveauRestrict = c("intensif", "securise", "accueil",
+                     "intensif", "semi-autonome",
+                     "intensif", "semi-autonome", "intensif")
+)
+
+# --- dim_jeune : une ligne par jeune ---
+# (issu de ta table profil nettoyée)
+dimJeune <- copy(dtProfil)
+
+# Ajout clé propre si besoin
+dimJeune[, jeuneId := id]  # id est déjà la PK
+
+# --- fact_episode : une ligne par épisode ---
+# (issu de ta table trajectoire nettoyée)
+factEpisode <- copy(dtTrajectoires)
+
+# Création d'un identifiant unique d'épisode
+factEpisode[, episodeId := .I]  # numéro de ligne global unique
+
+# Jointure FK structure
+factEpisode <- merge(
+  factEpisode,
+  dimStructure[, .(structureNom, structureId)],
+  by.x = "sejour",
+  by.y = "structureNom",
+  all.x = TRUE
+)
+
+# Vérification que les 3 tables sont bien construites
+cat("dim_jeune    :", nrow(dimJeune),    "jeunes\n")
+cat("dim_structure:", nrow(dimStructure),"structures\n")
+cat("fact_episode :", nrow(factEpisode), "épisodes\n")
+```
+
+### Étape 2 — Fonction de validation générique
+
+``` r
+# ============================================================
+# Infrastructure de validation : collecteur de résultats
+# ============================================================
+
+# Initialisation du rapport de validation
+rapportValidation <- data.table(
+  regle       = character(),
+  section     = character(),
+  nErreurs    = integer(),
+  nAlertes    = integer(),
+  details     = character(),
+  statut      = character()   # "OK", "ALERTE", "ERREUR"
+)
+
+# Fonction pour ajouter une règle au rapport
+ajouterRegle <- function(rapport, regle, section, 
+                          nErreurs, nAlertes = 0L, details = "") {
+  statut <- fcase(
+    nErreurs > 0L,  "ERREUR",
+    nAlertes > 0L,  "ALERTE",
+    default         = "OK"
+  )
+  rbind(rapport, data.table(
+    regle, section, 
+    nErreurs  = as.integer(nErreurs),
+    nAlertes  = as.integer(nAlertes),
+    details, statut
+  ))
+}
+```
+
+### Étape 3 — Règles section 1–2 (individus)
+
+``` r
+# ============================================================
+# Section 1-2 : Validation de dim_jeune
+# ============================================================
+
+validerDimJeune <- function(dimJeune, rapport) {
+  
+  # R1 — Unicité des identifiants jeunes
+  nDoublons <- nrow(dimJeune) - uniqueN(dimJeune$id)
+  rapport <- ajouterRegle(rapport,
+    regle    = "R1 - Unicité ID jeune",
+    section  = "dim_jeune",
+    nErreurs = nDoublons,
+    details  = paste(nDoublons, "doublons détectés")
+  )
+  
+  # R2 — Date de naissance renseignée
+  nNaDob <- sum(is.na(dimJeune$dateNaissance))
+  rapport <- ajouterRegle(rapport,
+    regle    = "R2 - Date naissance non manquante",
+    section  = "dim_jeune",
+    nErreurs = nNaDob,
+    details  = paste(nNaDob, "dates de naissance manquantes")
+  )
+  
+  # R3 — Cohérence date majorité / date naissance (≈ 18 ans ± 1 mois)
+  if (!is.null(dimJeune$dateMajorite) & !is.null(dimJeune$dateNaissance)) {
+    dimJeune[, ageMajorite := as.numeric(
+      difftime(dateMajorite, dateNaissance, units = "days")
+    ) / 365.25]
+    
+    nIncoh <- sum(
+      dimJeune$ageMajorite < 17.9 | dimJeune$ageMajorite > 18.1,
+      na.rm = TRUE
+    )
+    rapport <- ajouterRegle(rapport,
+      regle    = "R3 - Cohérence date majorité / naissance",
+      section  = "dim_jeune",
+      nErreurs = nIncoh,
+      details  = paste(nIncoh, "incohérences majorité/naissance")
+    )
+  }
+  
+  # R4 — Âge à l'admission plausible
+  if ("ageAdmission" %in% names(dimJeune)) {
+    nAgeImp <- sum(
+      dimJeune$ageAdmission < PARAM_AGE_MIN_ADMISSION |
+      dimJeune$ageAdmission > PARAM_AGE_MAX_ADMISSION,
+      na.rm = TRUE
+    )
+    rapport <- ajouterRegle(rapport,
+      regle    = "R4 - Âge admission plausible",
+      section  = "dim_jeune",
+      nAlertes = nAgeImp,
+      details  = paste(nAgeImp, "âges hors bornes",
+                       PARAM_AGE_MIN_ADMISSION, "-", PARAM_AGE_MAX_ADMISSION)
+    )
+  }
+  
+  rapport
+}
+
+rapportValidation <- validerDimJeune(dimJeune, rapportValidation)
+```
+
+### Étape 4 — Règles section 3–5 (épisodes + temporel)
+
+``` r
+# ============================================================
+# Section 3-5 : Validation de fact_episode
+# ============================================================
+
+validerFactEpisode <- function(factEpisode, rapport) {
+  
+  # R5 — Types d'épisodes valides
+  typesPresents <- unique(factEpisode$typeEvenement)
+  typesInvalides <- setdiff(typesPresents, PARAM_TYPES_VALIDES)
+  rapport <- ajouterRegle(rapport,
+    regle    = "R5 - Types épisodes valides",
+    section  = "fact_episode",
+    nErreurs = length(typesInvalides),
+    details  = paste("Types invalides:", paste(typesInvalides, collapse = ", "))
+  )
+  
+  # R6 — Date de début renseignée
+  nNaDebut <- sum(is.na(factEpisode$dateDebut))
+  rapport <- ajouterRegle(rapport,
+    regle    = "R6 - Date début non manquante",
+    section  = "fact_episode",
+    nErreurs = nNaDebut,
+    details  = paste(nNaDebut, "dates de début manquantes")
+  )
+  
+  # R7 — Date fin >= date début (épisodes terminés)
+  episodesTermines <- factEpisode[!is.na(dateFin)]
+  nDateInv <- sum(episodesTermines$dateFin < episodesTermines$dateDebut)
+  rapport <- ajouterRegle(rapport,
+    regle    = "R7 - Date fin >= date début",
+    section  = "fact_episode",
+    nErreurs = nDateInv,
+    details  = paste(nDateInv, "épisodes avec fin antérieure au début")
+  )
+  
+  # R8 — Cohérence durée calculée vs durée stockée
+  episodesTermines[, dureeCalculee := as.numeric(dateFin - dateDebut)]
+  nDureeIncoh <- sum(
+    abs(episodesTermines$dureeCalculee - episodesTermines$duree) > 1,
+    na.rm = TRUE
+  )
+  rapport <- ajouterRegle(rapport,
+    regle    = "R8 - Cohérence durée calculée/stockée",
+    section  = "fact_episode",
+    nErreurs = nDureeIncoh,
+    details  = paste(nDureeIncoh, "incohérences durée (tolérance ±1 jour)")
+  )
+  
+  # R9 — Durées plausibles
+  nDureeMax <- sum(
+    factEpisode$duree > PARAM_DUREE_MAX_JOURS, na.rm = TRUE
+  )
+  nDureeNeg <- sum(factEpisode$duree < 0, na.rm = TRUE)
+  rapport <- ajouterRegle(rapport,
+    regle    = "R9 - Durées plausibles",
+    section  = "fact_episode",
+    nErreurs = nDureeNeg,
+    nAlertes = nDureeMax,
+    details  = paste(nDureeNeg, "durées négatives |",
+                     nDureeMax, "durées > ", PARAM_DUREE_MAX_JOURS, "j")
+  )
+  
+  # R10 — Ordre chronologique par jeune
+  setorder(factEpisode, id, dateDebut)
+  factEpisode[, dateDebutLag := shift(dateDebut, 1L), by = id]
+  nOrdre <- sum(
+    factEpisode$dateDebut < factEpisode$dateDebutLag,
+    na.rm = TRUE
+  )
+  rapport <- ajouterRegle(rapport,
+    regle    = "R10 - Ordre chronologique",
+    section  = "fact_episode",
+    nErreurs = nOrdre,
+    details  = paste(nOrdre, "ruptures d'ordre chronologique")
+  )
+  
+  rapport
+}
+
+rapportValidation <- validerFactEpisode(factEpisode, rapportValidation)
+```
+
+### Étape 5 — Règles section 4 (relations entre tables)
+
+``` r
+# ============================================================
+# Section 4 : Validation des relations entre tables (FK)
+# ============================================================
+
+validerRelations <- function(dimJeune, dimStructure, 
+                              factEpisode, rapport) {
+  
+  # R11 — Tous les ID jeunes dans fact_episode existent dans dim_jeune
+  idsJeune   <- dimJeune$id
+  idsEpisode <- unique(factEpisode$id)
+  idsOrphans <- setdiff(idsEpisode, idsJeune)
+  rapport <- ajouterRegle(rapport,
+    regle    = "R11 - FK jeune valide",
+    section  = "relations",
+    nErreurs = length(idsOrphans),
+    details  = paste(length(idsOrphans), 
+                     "épisodes sans jeune correspondant")
+  )
+  
+  # R12 — Tous les ID structures dans fact_episode existent dans dim_structure
+  structEpisode <- unique(factEpisode[
+    typeEvenement == "sejour" & !is.na(sejour), sejour
+  ])
+  structInvalides <- setdiff(structEpisode, dimStructure$structureNom)
+  rapport <- ajouterRegle(rapport,
+    regle    = "R12 - FK structure valide",
+    section  = "relations",
+    nErreurs = length(structInvalides),
+    details  = paste("Structures inconnues:", 
+                     paste(structInvalides, collapse = " | "))
+  )
+  
+  # R13 — Jeunes sans aucun épisode (alertes)
+  idsAvecEpisode <- unique(factEpisode$id)
+  idsSansEpisode <- setdiff(idsJeune, idsAvecEpisode)
+  rapport <- ajouterRegle(rapport,
+    regle    = "R13 - Jeunes sans épisode",
+    section  = "relations",
+    nAlertes = length(idsSansEpisode),
+    details  = paste(length(idsSansEpisode), 
+                     "jeunes sans aucun épisode associé")
+  )
+  
+  rapport
+}
+
+rapportValidation <- validerRelations(
+  dimJeune, dimStructure, factEpisode, rapportValidation
+)
+```
+
+### Étape 6 — Règles métier spécifiques (section 6)
+
+``` r
+# ============================================================
+# Section 6 : Règles métier placement
+# ============================================================
+
+validerMetier <- function(dimJeune, factEpisode, rapport) {
+  
+  # R14 — Fugue pendant un séjour actif
+  fugues  <- factEpisode[typeEvenement == "fugue"]
+  sejours <- factEpisode[typeEvenement == "sejour"]
+  
+  # Pour chaque fugue, vérifier qu'il existe un séjour actif simultané
+  fuguesSansSejour <- fugues[, {
+    idCourant  <- id[1]
+    sejoursId  <- sejours[id == idCourant]
+    # Au moins un séjour dont la période chevauche la fugue
+    nOk <- sum(mapply(function(deb, fin) {
+      any(sejoursId$dateDebut <= deb & 
+          (is.na(sejoursId$dateFin) | sejoursId$dateFin >= fin))
+    }, dateDebut, dateFin))
+    .(nFuguesSansSejour = .N - nOk)
+  }, by = id]
+  
+  nFuguesSansSejour <- sum(fuguesSansSejour$nFuguesSansSejour)
+  rapport <- ajouterRegle(rapport,
+    regle    = "R14 - Fugue pendant séjour actif",
+    section  = "metier",
+    nAlertes = nFuguesSansSejour,
+    details  = paste(nFuguesSansSejour, 
+                     "fugues sans séjour actif correspondant")
+  )
+  
+  # R15 — Cohérence sortie majorité / date majorité
+  sortieMajorite <- factEpisode[
+    grepl("majorit", destination, ignore.case = TRUE) & !is.na(dateFin)
+  ]
+  
+  if (nrow(sortieMajorite) > 0) {
+    sortieMajorite <- merge(
+      sortieMajorite[, .(id, dateFin)],
+      dimJeune[, .(id, dateMajorite)],
+      by = "id"
+    )
+    sortieMajorite[, ecartMajorite := abs(
+      as.numeric(dateFin - dateMajorite)
+    )]
+    nMajoriteIncoh <- sum(
+      sortieMajorite$ecartMajorite > PARAM_TOLERANCE_MAJORITE,
+      na.rm = TRUE
+    )
+    rapport <- ajouterRegle(rapport,
+      regle    = "R15 - Cohérence sortie majorité",
+      section  = "metier",
+      nAlertes = nMajoriteIncoh,
+      details  = paste(nMajoriteIncoh, 
+                       "sorties majorité incohérentes (tolérance",
+                       PARAM_TOLERANCE_MAJORITE, "j)")
+    )
+  }
+  
+  # R16 — Séjour sans structure associée
+  sejoursSansStruct <- factEpisode[
+    typeEvenement == "sejour" & (is.na(sejour) | sejour == "")
+  ]
+  rapport <- ajouterRegle(rapport,
+    regle    = "R16 - Séjour avec structure",
+    section  = "metier",
+    nErreurs = nrow(sejoursSansStruct),
+    details  = paste(nrow(sejoursSansStruct), 
+                     "séjours sans structure associée")
+  )
+  
+  rapport
+}
+
+rapportValidation <- validerMetier(dimJeune, factEpisode, rapportValidation)
+```
+
+### Étape 7 — Règles complétude et NA (section 9)
+
+``` r
+# ============================================================
+# Section 9 : Validation de complétude
+# ============================================================
+
+validerCompletude <- function(dimJeune, factEpisode, rapport) {
+  
+  # Variables critiques et leur seuil de tolérance NA
+  varsJeune <- list(
+    sexe          = 0.00,   # 0% toléré
+    ageAnnees     = 0.00,
+    nationaliteAdap = 0.10,
+    dateMajorite  = 0.00
+  )
+  
+  varsEpisode <- list(
+    typeEvenement = 0.00,
+    dateDebut     = 0.00,
+    dateFin       = 0.30,   # 30% toléré (épisodes en cours)
+    sejour        = 0.20    # 20% toléré (congés/fugues sans structure)
+  )
+  
+  # Vérification pour dim_jeune
+  for (varNom in names(varsJeune)) {
+    if (varNom %in% names(dimJeune)) {
+      tauxNa <- mean(is.na(dimJeune[[varNom]]))
+      seuilVar <- varsJeune[[varNom]]
+      rapport <- ajouterRegle(rapport,
+        regle    = paste0("R17 - Complétude ", varNom),
+        section  = "completude",
+        nErreurs = as.integer(tauxNa > seuilVar),
+        details  = sprintf("%.1f%% NA (seuil %.0f%%)",
+                           tauxNa * 100, seuilVar * 100)
+      )
+    }
+  }
+  
+  # Vérification pour fact_episode
+  for (varNom in names(varsEpisode)) {
+    if (varNom %in% names(factEpisode)) {
+      tauxNa <- mean(is.na(factEpisode[[varNom]]) | 
+                     factEpisode[[varNom]] == "")
+      seuilVar <- varsEpisode[[varNom]]
+      rapport <- ajouterRegle(rapport,
+        regle    = paste0("R18 - Complétude ", varNom),
+        section  = "completude",
+        nErreurs = as.integer(tauxNa > seuilVar),
+        details  = sprintf("%.1f%% NA (seuil %.0f%%)",
+                           tauxNa * 100, seuilVar * 100)
+      )
+    }
+  }
+  
+  rapport
+}
+
+rapportValidation <- validerCompletude(dimJeune, factEpisode, rapportValidation)
+```
+
+### Étape 8 — Rapport final
+
+``` r
+# ============================================================
+# Rapport de validation consolidé
+# ============================================================
+
+afficherRapport <- function(rapport) {
+  
+  cat("\n", strrep("=", 60), "\n")
+  cat("       RAPPORT DE VALIDATION DES DONNÉES\n")
+  cat(strrep("=", 60), "\n\n")
+  
+  # Résumé global
+  cat(sprintf("✅ Règles OK      : %d\n", sum(rapport$statut == "OK")))
+  cat(sprintf("⚠️  Alertes        : %d\n", sum(rapport$statut == "ALERTE")))
+  cat(sprintf("❌ Erreurs        : %d\n", sum(rapport$statut == "ERREUR")))
+  cat("\n")
+  
+  # Détail par section
+  for (sec in unique(rapport$section)) {
+    cat(sprintf("\n--- %s ---\n", toupper(sec)))
+    sousRapport <- rapport[section == sec]
+    for (i in seq_len(nrow(sousRapport))) {
+      icone <- fcase(
+        sousRapport$statut[i] == "OK",     "✅",
+        sousRapport$statut[i] == "ALERTE", "⚠️ ",
+        default                            = "❌"
+      )
+      cat(sprintf("  %s %-45s %s\n",
+        icone,
+        sousRapport$regle[i],
+        sousRapport$details[i]
+      ))
+    }
+  }
+  
+  cat("\n", strrep("=", 60), "\n")
+  invisible(rapport)
+}
+
+afficherRapport(rapportValidation)
+
+# Export du rapport en CSV pour archivage
+fwrite(rapportValidation, "rapport_validation.csv")
+```
+
+------------------------------------------------------------------------
+
+## 4. Règle manquante importante à ajouter
+
+Il manque selon moi une règle critique pour ton contexte :
+
+``` r
+# R_SUPP — Chevauchement entre séjours du même jeune
+# (deux séjours actifs simultanément = erreur de saisie)
+
+validerChevauchements <- function(factEpisode, rapport) {
+  
+  sejours <- factEpisode[
+    typeEvenement == "sejour" & !is.na(dateDebut) & !is.na(dateFin)
+  ]
+  setorder(sejours, id, dateDebut)
+  
+  # Détection : fin du séjour N > début du séjour N+1
+  sejours[, dateFinLag := shift(dateFin, 1L),  by = id]
+  sejours[, idLag      := shift(id, 1L)]
+  
+  nChevauch <- nrow(sejours[
+    id == idLag & dateDebut < dateFinLag
+  ])
+  
+  ajouterRegle(rapport,
+    regle    = "R_SUPP - Chevauchement séjours",
+    section  = "temporel",
+    nErreurs = nChevauch,
+    details  = paste(nChevauch, "chevauchements entre séjours")
+  )
+}
+
+rapportValidation <- validerChevauchements(factEpisode, rapportValidation)
+```
+
+------------------------------------------------------------------------
+
+Veux-tu qu'on lance ces validations sur tes données réelles et qu'on interprète les résultats ensemble ?
+
+User: Peux tu m'écrire un script comprenant toutes les règles de validations et qui me donne à la fin un tableau avec les cas problématiques par règles
+
+Assistant: \# Script complet de validation
+
+``` r
+# ============================================================
+# VALIDATION DES DONNÉES — JEUNES PLACÉS AU LUXEMBOURG
+# Auteur  : Jean-Eudes Méthodologiste
+# Date    : 2025
+# Version : 1.0
+# ============================================================
+# Dépendances : data.table, purrr
+# Usage       : source("validation.R")
+# ============================================================
+
+library(data.table)
+library(purrr)
+
+# ============================================================
+# 0. PARAMÈTRES GLOBAUX
+# ============================================================
+
+PARAM <- list(
+  ageMinAdmission     = 10L,
+  ageMaxAdmission     = 17L,
+  dureeMaxJours       = 365L * 3L,
+  toleranceMajorite   = 30L,
+  seuilNaCritique     = 0.30,
+  typesValides        = c("admission", "sejour", "conge", "fugue", "suivi"),
+  structuresValides   = c(
+    "CSEE_X Intensivpadagogische Wohngruppe",
+    "CSEE Unisec",
+    "CSEE_Y Aufnahmegruppe",
+    "CSEE_Z Intensivpadagogische Wohngruppe",
+    "CSEE_Y Studio",
+    "CSEE_Y Intensivpadagogische Wohngruppe",
+    "CSEE_Y semi-autonome Wohngruppe",
+    "CSEE Intensivpadagogische Wohngruppe"
+  )
+)
+
+# ============================================================
+# 1. INFRASTRUCTURE : COLLECTEUR DE CAS PROBLÉMATIQUES
+# ============================================================
+
+# Initialisation de la table des cas problématiques
+# Chaque ligne = un cas problématique pour une règle donnée
+casProblematiques <- data.table(
+  regleId     = character(),   # identifiant de la règle
+  regleLabel  = character(),   # description lisible
+  section     = character(),   # section du document de règles
+  severite    = character(),   # "ERREUR" ou "ALERTE"
+  table       = character(),   # table source du problème
+  id          = character(),   # identifiant du jeune concerné
+  episodeId   = character(),   # identifiant de l'épisode (si applicable)
+  valeurObs   = character(),   # valeur observée problématique
+  details     = character()    # explication contextuelle
+)
+
+# Fonction utilitaire : ajout de cas problématiques au collecteur
+# Retourne la table mise à jour (pattern fonctionnel, pas d'effet de bord)
+ajouterCas <- function(collecteur, regleId, regleLabel, section,
+                        severite, table, dtCas) {
+  # Guard : aucun cas problématique à ajouter
+  if (is.null(dtCas) || nrow(dtCas) == 0L) {
+    return(collecteur)
+  }
+
+  # Normalisation : s'assurer que les colonnes attendues existent
+  colonnesAttendues <- c("id", "episodeId", "valeurObs", "details")
+  for (col in colonnesAttendues) {
+    if (!col %in% names(dtCas)) {
+      dtCas[, (col) := NA_character_]
+    }
+  }
+
+  # Forçage en character pour toutes les colonnes clés
+  dtCas[, id        := as.character(id)]
+  dtCas[, episodeId := as.character(episodeId)]
+  dtCas[, valeurObs := as.character(valeurObs)]
+  dtCas[, details   := as.character(details)]
+
+  nouvelleLigne <- dtCas[, .(
+    regleId    = regleId,
+    regleLabel = regleLabel,
+    section    = section,
+    severite   = severite,
+    table      = table,
+    id,
+    episodeId,
+    valeurObs,
+    details
+  )]
+
+  rbind(collecteur, nouvelleLigne)
+}
+
+# ============================================================
+# 2. SECTION 1–2 : VALIDATION DE dim_jeune
+# ============================================================
+
+validerDimJeune <- function(dimJeune, collecteur) {
+
+  cat("  >> Validation dim_jeune...\n")
+
+  # ----------------------------------------------------------
+  # R01 — Unicité des identifiants jeunes
+  # ----------------------------------------------------------
+  doublons <- dimJeune[duplicated(id), .(
+    id,
+    episodeId = NA_character_,
+    valeurObs = id,
+    details   = "Identifiant dupliqué dans dim_jeune"
+  )]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R01",
+    regleLabel = "Unicité ID jeune",
+    section    = "S1 - Règles générales",
+    severite   = "ERREUR",
+    table      = "dim_jeune",
+    dtCas      = doublons
+  )
+
+  # ----------------------------------------------------------
+  # R02 — Date de naissance renseignée
+  # ----------------------------------------------------------
+  # Adaptation : utilisation de dateNaissance si disponible,
+  # sinon reconstruction depuis anneeDeNaissance + moisDeNaissance
+  if ("dateNaissance" %in% names(dimJeune)) {
+    nasDob <- dimJeune[is.na(dateNaissance), .(
+      id,
+      episodeId = NA_character_,
+      valeurObs = NA_character_,
+      details   = "Date de naissance manquante"
+    )]
+  } else if (all(c("anneeDeNaissance", "moisDeNaissance") %in% names(dimJeune))) {
+    nasDob <- dimJeune[
+      is.na(anneeDeNaissance) | is.na(moisDeNaissance), .(
+        id,
+        episodeId = NA_character_,
+        valeurObs = NA_character_,
+        details   = "Année ou mois de naissance manquant"
+      )
+    ]
+  } else {
+    nasDob <- data.table()
+  }
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R02",
+    regleLabel = "Date naissance renseignée",
+    section    = "S2 - Individus",
+    severite   = "ERREUR",
+    table      = "dim_jeune",
+    dtCas      = nasDob
+  )
+
+  # ----------------------------------------------------------
+  # R03 — Date de majorité cohérente avec la naissance (≈ 18 ans)
+  # ----------------------------------------------------------
+  if (all(c("dateMajorite", "anneeDeNaissance", "moisDeNaissance")
+          %in% names(dimJeune))) {
+
+    dimJeune[, dateNaissanceCalc := as.Date(paste0(
+      anneeDeNaissance, "-",
+      formatC(moisDeNaissance, width = 2, flag = "0"),
+      "-01"
+    ))]
+
+    dimJeune[, ageMajorite := as.numeric(
+      difftime(dateMajorite, dateNaissanceCalc, units = "days")
+    ) / 365.25]
+
+    majIncoherentes <- dimJeune[
+      !is.na(ageMajorite) & (ageMajorite < 17.5 | ageMajorite > 18.5), .(
+        id,
+        episodeId = NA_character_,
+        valeurObs = as.character(round(ageMajorite, 2L)),
+        details   = paste0(
+          "Âge à la majorité = ", round(ageMajorite, 2L),
+          " ans (attendu : 18 ± 0.5)"
+        )
+      )
+    ]
+    collecteur <- ajouterCas(
+      collecteur,
+      regleId    = "R03",
+      regleLabel = "Cohérence majorité / naissance",
+      section    = "S2 - Individus",
+      severite   = "ALERTE",
+      table      = "dim_jeune",
+      dtCas      = majIncoherentes
+    )
+  }
+
+  # ----------------------------------------------------------
+  # R04 — Âge à l'admission plausible
+  # ----------------------------------------------------------
+  if ("ageAnnees" %in% names(dimJeune)) {
+    agesImplausibles <- dimJeune[
+      !is.na(ageAnnees) & (
+        ageAnnees < PARAM$ageMinAdmission |
+        ageAnnees > PARAM$ageMaxAdmission
+      ), .(
+        id,
+        episodeId = NA_character_,
+        valeurObs = as.character(ageAnnees),
+        details   = paste0(
+          "Âge = ", ageAnnees,
+          " ans (attendu entre ", PARAM$ageMinAdmission,
+          " et ", PARAM$ageMaxAdmission, ")"
+        )
+      )
+    ]
+    collecteur <- ajouterCas(
+      collecteur,
+      regleId    = "R04",
+      regleLabel = "Âge admission plausible",
+      section    = "S2 - Individus",
+      severite   = "ALERTE",
+      table      = "dim_jeune",
+      dtCas      = agesImplausibles
+    )
+  }
+
+  # ----------------------------------------------------------
+  # R05 — Sexe renseigné
+  # ----------------------------------------------------------
+  if ("sexe" %in% names(dimJeune)) {
+    nasSexe <- dimJeune[is.na(sexe) | sexe == "", .(
+      id,
+      episodeId = NA_character_,
+      valeurObs = NA_character_,
+      details   = "Sexe manquant"
+    )]
+    collecteur <- ajouterCas(
+      collecteur,
+      regleId    = "R05",
+      regleLabel = "Sexe renseigné",
+      section    = "S9 - Complétude",
+      severite   = "ALERTE",
+      table      = "dim_jeune",
+      dtCas      = nasSexe
+    )
+  }
+
+  # ----------------------------------------------------------
+  # R06 — Motif de sortie final renseigné
+  # ----------------------------------------------------------
+  if ("motifDeSortie" %in% names(dimJeune)) {
+    nasSortie <- dimJeune[
+      is.na(motifDeSortie) | motifDeSortie == "", .(
+        id,
+        episodeId = NA_character_,
+        valeurObs = NA_character_,
+        details   = "Motif de sortie final manquant"
+      )
+    ]
+    collecteur <- ajouterCas(
+      collecteur,
+      regleId    = "R06",
+      regleLabel = "Motif de sortie renseigné",
+      section    = "S9 - Complétude",
+      severite   = "ALERTE",
+      table      = "dim_jeune",
+      dtCas      = nasSortie
+    )
+  }
+
+  collecteur
+}
+
+# ============================================================
+# 3. SECTION 3–5 : VALIDATION DE fact_episode
+# ============================================================
+
+validerFactEpisode <- function(factEpisode, collecteur) {
+
+  cat("  >> Validation fact_episode...\n")
+
+  # ----------------------------------------------------------
+  # R07 — Type d'épisode appartient à la liste fermée
+  # ----------------------------------------------------------
+  typesInvalides <- factEpisode[
+    !typeEvenement %in% PARAM$typesValides, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = typeEvenement,
+      details   = paste0(
+        "Type '", typeEvenement,
+        "' absent de la liste : ",
+        paste(PARAM$typesValides, collapse = ", ")
+      )
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R07",
+    regleLabel = "Type épisode valide",
+    section    = "S3 - Épisodes",
+    severite   = "ERREUR",
+    table      = "fact_episode",
+    dtCas      = typesInvalides
+  )
+
+  # ----------------------------------------------------------
+  # R08 — Date de début renseignée
+  # ----------------------------------------------------------
+  nasDebut <- factEpisode[is.na(dateDebut), .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = NA_character_,
+    details   = paste0("Date de début manquante (type : ", typeEvenement, ")")
+  )]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R08",
+    regleLabel = "Date début renseignée",
+    section    = "S3 - Épisodes",
+    severite   = "ERREUR",
+    table      = "fact_episode",
+    dtCas      = nasDebut
+  )
+
+  # ----------------------------------------------------------
+  # R09 — Date fin >= date début (épisodes terminés seulement)
+  # ----------------------------------------------------------
+  datesInverses <- factEpisode[
+    !is.na(dateFin) & dateFin < dateDebut, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = paste0(dateDebut, " → ", dateFin),
+      details   = paste0(
+        "Date fin (", dateFin,
+        ") antérieure à date début (", dateDebut, ")"
+      )
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R09",
+    regleLabel = "Date fin >= date début",
+    section    = "S3 - Épisodes",
+    severite   = "ERREUR",
+    table      = "fact_episode",
+    dtCas      = datesInverses
+  )
+
+  # ----------------------------------------------------------
+  # R10 — Cohérence durée calculée vs durée stockée (tolérance 1 jour)
+  # ----------------------------------------------------------
+  episodesTermines <- factEpisode[!is.na(dateFin) & !is.na(dateDebut)]
+  episodesTermines[, dureeCalculee := as.integer(dateFin - dateDebut)]
+
+  dureeIncoherentes <- episodesTermines[
+    !is.na(duree) & abs(dureeCalculee - duree) > 1L, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = paste0("stockée=", duree, " | calculée=", dureeCalculee),
+      details   = paste0(
+        "Écart de ", abs(dureeCalculee - duree),
+        " jour(s) entre durée stockée et calculée"
+      )
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R10",
+    regleLabel = "Cohérence durée calculée/stockée",
+    section    = "S8 - Durées",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = dureeIncoherentes
+  )
+
+  # ----------------------------------------------------------
+  # R11 — Durées négatives
+  # ----------------------------------------------------------
+  dureesNegatives <- factEpisode[!is.na(duree) & duree < 0L, .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = as.character(duree),
+    details   = paste0("Durée négative : ", duree, " jours")
+  )]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R11",
+    regleLabel = "Durée non négative",
+    section    = "S8 - Durées",
+    severite   = "ERREUR",
+    table      = "fact_episode",
+    dtCas      = dureesNegatives
+  )
+
+  # ----------------------------------------------------------
+  # R12 — Durées excessivement longues
+  # ----------------------------------------------------------
+  dureesLongues <- factEpisode[
+    !is.na(duree) & duree > PARAM$dureeMaxJours, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = as.character(duree),
+      details   = paste0(
+        "Durée de ", duree,
+        " jours > seuil de ", PARAM$dureeMaxJours, " jours"
+      )
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R12",
+    regleLabel = "Durée non excessive",
+    section    = "S8 - Durées",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = dureesLongues
+  )
+
+  # ----------------------------------------------------------
+  # R13 — Ordre chronologique des épisodes par jeune
+  # ----------------------------------------------------------
+  setorder(factEpisode, id, dateDebut)
+  factEpisode[, dateDebutPrecedent := shift(dateDebut, 1L), by = id]
+  factEpisode[, idPrecedent        := shift(id, 1L)]
+
+  ordreRompu <- factEpisode[
+    !is.na(dateDebutPrecedent) &
+    id == idPrecedent &
+    dateDebut < dateDebutPrecedent, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = as.character(dateDebut),
+      details   = paste0(
+        "Date début (", dateDebut,
+        ") antérieure à l'épisode précédent (",
+        dateDebutPrecedent, ")"
+      )
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R13",
+    regleLabel = "Ordre chronologique",
+    section    = "S3 - Épisodes",
+    severite   = "ERREUR",
+    table      = "fact_episode",
+    dtCas      = ordreRompu
+  )
+
+  # Nettoyage colonnes temporaires
+  factEpisode[, c("dateDebutPrecedent", "idPrecedent") := NULL]
+
+  # ----------------------------------------------------------
+  # R14 — Rang des épisodes continu par type et par jeune
+  # ----------------------------------------------------------
+  # Vérification : pas de saut dans la numérotation (1, 2, 3 sans trou)
+  rangDiscontinu <- factEpisode[
+    !is.na(numEvenement) & typeEvenement != "admission"
+  ][, {
+    rangs <- sort(unique(numEvenement))
+    attendus <- seq_len(max(rangs))
+    manquants <- setdiff(attendus, rangs)
+    if (length(manquants) > 0L) {
+      .(
+        id        = id[1L],
+        episodeId = NA_character_,
+        valeurObs = paste(manquants, collapse = ", "),
+        details   = paste0(
+          "Rang(s) manquant(s) pour type '",
+          typeEvenement[1L], "' : ",
+          paste(manquants, collapse = ", ")
+        )
+      )
+    } else {
+      NULL
+    }
+  }, by = .(id, typeEvenement)]
+
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R14",
+    regleLabel = "Rang épisode continu",
+    section    = "S3 - Épisodes",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = rangDiscontinu
+  )
+
+  collecteur
+}
+
+# ============================================================
+# 4. SECTION 4 : VALIDATION DES RELATIONS ENTRE TABLES (FK)
+# ============================================================
+
+validerRelations <- function(dimJeune, factEpisode, collecteur) {
+
+  cat("  >> Validation des relations entre tables...\n")
+
+  # ----------------------------------------------------------
+  # R15 — Tous les ID épisodes → jeune existant (FK)
+  # ----------------------------------------------------------
+  idsJeune   <- dimJeune$id
+  orphelins  <- factEpisode[!id %in% idsJeune, .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = id,
+    details   = paste0(
+      "ID '", id,
+      "' présent dans fact_episode mais absent de dim_jeune"
+    )
+  )]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R15",
+    regleLabel = "FK jeune valide",
+    section    = "S4 - Relations",
+    severite   = "ERREUR",
+    table      = "fact_episode",
+    dtCas      = orphelins
+  )
+
+  # ----------------------------------------------------------
+  # R16 — Structures dans les séjours appartiennent au référentiel
+  # ----------------------------------------------------------
+  structuresInconnues <- factEpisode[
+    typeEvenement == "sejour" &
+    !is.na(sejour) & sejour != "" &
+    !sejour %in% PARAM$structuresValides, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = sejour,
+      details   = paste0("Structure '", sejour, "' absente du référentiel")
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R16",
+    regleLabel = "Structure valide",
+    section    = "S4 - Relations",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = structuresInconnues
+  )
+
+  # ----------------------------------------------------------
+  # R17 — Jeunes sans aucun épisode associé
+  # ----------------------------------------------------------
+  idsAvecEpisode <- unique(factEpisode$id)
+  idsSansEpisode <- setdiff(idsJeune, idsAvecEpisode)
+
+  if (length(idsSansEpisode) > 0L) {
+    jeunesSansEpisode <- data.table(
+      id        = idsSansEpisode,
+      episodeId = NA_character_,
+      valeurObs = NA_character_,
+      details   = "Jeune présent dans dim_jeune sans aucun épisode"
+    )
+    collecteur <- ajouterCas(
+      collecteur,
+      regleId    = "R17",
+      regleLabel = "Jeune avec au moins un épisode",
+      section    = "S4 - Relations",
+      severite   = "ALERTE",
+      table      = "dim_jeune",
+      dtCas      = jeunesSansEpisode
+    )
+  }
+
+  collecteur
+}
+
+# ============================================================
+# 5. SECTION 5 : VALIDATION TEMPORELLE
+# ============================================================
+
+validerTemporel <- function(dimJeune, factEpisode, collecteur) {
+
+  cat("  >> Validation temporelle...\n")
+
+  # Jointure jeune → épisode pour avoir les bornes individuelles
+  bornesJeune <- dimJeune[, .(id, dateMajorite)]
+  episodesAvecBornes <- merge(
+    factEpisode,
+    bornesJeune,
+    by  = "id",
+    all.x = TRUE
+  )
+
+  # ----------------------------------------------------------
+  # R18 — Aucun épisode après la date de majorité
+  # ----------------------------------------------------------
+  apresMAjorite <- episodesAvecBornes[
+    !is.na(dateMajorite.y) &
+    !is.na(dateDebut) &
+    dateDebut > dateMajorite.y + PARAM$toleranceMajorite, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = as.character(dateDebut),
+      details   = paste0(
+        "Épisode débute le ", dateDebut,
+        " après majorité le ", dateMajorite.y,
+        " (tolérance ", PARAM$toleranceMajorite, "j)"
+      )
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R18",
+    regleLabel = "Épisode avant majorité",
+    section    = "S5 - Temporel",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = apresMAjorite
+  )
+
+  # ----------------------------------------------------------
+  # R19 — Chevauchement entre séjours d'un même jeune
+  # ----------------------------------------------------------
+  sejours <- factEpisode[
+    typeEvenement == "sejour" &
+    !is.na(dateDebut) & !is.na(dateFin)
+  ]
+  setorder(sejours, id, dateDebut)
+  sejours[, dateFinPrecedent := shift(dateFin,   1L), by = id]
+  sejours[, idPrecedent      := shift(id, 1L)]
+
+  chevauchements <- sejours[
+    !is.na(dateFinPrecedent) &
+    id == idPrecedent &
+    dateDebut < dateFinPrecedent, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = paste0(dateDebut, " < fin précédente ", dateFinPrecedent),
+      details   = paste0(
+        "Séjour débute le ", dateDebut,
+        " avant fin du séjour précédent (", dateFinPrecedent, ")"
+      )
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R19",
+    regleLabel = "Pas de chevauchement séjours",
+    section    = "S5 - Temporel",
+    severite   = "ERREUR",
+    table      = "fact_episode",
+    dtCas      = chevauchements
+  )
+
+  # Nettoyage colonnes temporaires
+  sejours[, c("dateFinPrecedent", "idPrecedent") := NULL]
+
+  collecteur
+}
+
+# ============================================================
+# 6. SECTION 6 : RÈGLES MÉTIER SPÉCIFIQUES AU PLACEMENT
+# ============================================================
+
+validerMetier <- function(dimJeune, factEpisode, collecteur) {
+
+  cat("  >> Validation métier...\n")
+
+  # ----------------------------------------------------------
+  # R20 — Séjour sans structure associée
+  # ----------------------------------------------------------
+  sejoursSansStruct <- factEpisode[
+    typeEvenement == "sejour" & (is.na(sejour) | sejour == ""), .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = NA_character_,
+      details   = "Séjour sans structure (colonne séjour vide)"
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R20",
+    regleLabel = "Séjour avec structure",
+    section    = "S6 - Métier",
+    severite   = "ERREUR",
+    table      = "fact_episode",
+    dtCas      = sejoursSansStruct
+  )
+
+  # ----------------------------------------------------------
+  # R21 — Fugue pendant un séjour actif
+  # ----------------------------------------------------------
+  fugues  <- factEpisode[typeEvenement == "fugue" & !is.na(dateDebut)]
+  sejours <- factEpisode[
+    typeEvenement == "sejour" & !is.na(dateDebut) & !is.na(dateFin)
+  ]
+
+  # Pour chaque fugue : existe-t-il un séjour actif qui la couvre ?
+  fuguesSansSejour <- purrr::map(
+    unique(fugues$id),
+    function(jeuneId) {
+      fuguésJeune  <- fugues[id == jeuneId]
+      sejoursJeune <- sejours[id == jeuneId]
+
+      if (nrow(sejoursJeune) == 0L) {
+        return(fuguésJeune[, .(
+          id,
+          episodeId = as.character(episodeId),
+          valeurObs = as.character(dateDebut),
+          details   = "Fugue sans aucun séjour pour ce jeune"
+        )])
+      }
+
+      # Vérification chevauchement fugue ∩ séjour
+      estCouverte <- purrr::map_lgl(
+        seq_len(nrow(fuguésJeune)),
+        function(i) {
+          debFugue <- fuguésJeune$dateDebut[i]
+          any(
+            sejoursJeune$dateDebut <= debFugue &
+            sejoursJeune$dateFin   >= debFugue
+          )
+        }
+      )
+
+      fuguésJeune[!estCouverte, .(
+        id,
+        episodeId = as.character(episodeId),
+        valeurObs = as.character(dateDebut),
+        details   = paste0(
+          "Fugue du ", dateDebut,
+          " sans séjour actif correspondant"
+        )
+      )]
+    }
+  ) |>
+    purrr::keep(~ nrow(.x) > 0L) |>
+    rbindlist()
+
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R21",
+    regleLabel = "Fugue pendant séjour actif",
+    section    = "S6 - Métier",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = fuguesSansSejour
+  )
+
+  # ----------------------------------------------------------
+  # R22 — Cohérence sortie "majorité" avec date de majorité
+  # ----------------------------------------------------------
+  sortieMajorite <- factEpisode[
+    grepl("majorit", destination, ignore.case = TRUE) & !is.na(dateFin)
+  ]
+
+  if (nrow(sortieMajorite) > 0L) {
+    sortieMajorite <- merge(
+      sortieMajorite[, .(id, episodeId, dateFin)],
+      dimJeune[, .(id, dateMajorite)],
+      by = "id"
+    )
+    sortieMajorite[, ecart := abs(as.integer(dateFin - dateMajorite))]
+
+    majoriteIncoherente <- sortieMajorite[
+      ecart > PARAM$toleranceMajorite, .(
+        id,
+        episodeId = as.character(episodeId),
+        valeurObs = paste0("sortie=", dateFin, " | majorité=", dateMajorite),
+        details   = paste0(
+          "Écart de ", ecart,
+          " jours entre sortie et majorité (tolérance ",
+          PARAM$toleranceMajorite, "j)"
+        )
+      )
+    ]
+    collecteur <- ajouterCas(
+      collecteur,
+      regleId    = "R22",
+      regleLabel = "Cohérence sortie majorité",
+      section    = "S6 - Métier",
+      severite   = "ALERTE",
+      table      = "fact_episode",
+      dtCas      = majoriteIncoherente
+    )
+  }
+
+  # ----------------------------------------------------------
+  # R23 — Provenance du premier épisode renseignée
+  # ----------------------------------------------------------
+  # Premier séjour par jeune
+  premiersEpisodes <- factEpisode[
+    typeEvenement == "admission"
+  ][order(dateDebut), .SD[1L], by = id]
+
+  provenanceManquante <- premiersEpisodes[
+    is.na(provenance) | provenance == "", .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = NA_character_,
+      details   = "Provenance manquante pour la première admission"
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R23",
+    regleLabel = "Provenance première admission renseignée",
+    section    = "S6 - Métier",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = provenanceManquante
+  )
+
+  # ----------------------------------------------------------
+  # R24 — Destination du dernier épisode renseignée
+  # ----------------------------------------------------------
+  derniersEpisodes <- factEpisode[
+    typeEvenement == "admission"
+  ][order(dateDebut), .SD[.N], by = id]
+
+  destinationManquante <- derniersEpisodes[
+    is.na(destination) | destination == "", .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = NA_character_,
+      details   = "Destination manquante pour la dernière admission"
+    )
+  ]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R24",
+    regleLabel = "Destination dernière admission renseignée",
+    section    = "S6 - Métier",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = destinationManquante
+  )
+
+  collecteur
+}
+
+# ============================================================
+# 7. SECTION 7 : VALIDATION DES VALEURS CATÉGORIELLES
+# ============================================================
+
+validerCategoriel <- function(factEpisode, collecteur) {
+
+  cat("  >> Validation catégorielle...\n")
+
+  # ----------------------------------------------------------
+  # R25 — Variantes orthographiques provenances/destinations
+  # (Détection heuristique : doublons après normalisation)
+  # ----------------------------------------------------------
+  normaliser <- function(x) {
+    x |>
+      tolower() |>
+      trimws() |>
+      gsub(pattern = "\\s+",   replacement = " ") |>
+      gsub(pattern = "[éèê]",  replacement = "e") |>
+      gsub(pattern = "[àâ]",   replacement = "a") |>
+      gsub(pattern = "[üû]",   replacement = "u")
+  }
+
+  # Valeurs brutes vs normalisées pour provenance
+  valeursProv <- factEpisode[
+    !is.na(provenance) & provenance != "",
+    .(n = .N),
+    by = provenance
+  ]
+  valeursProv[, provenanceNorm := normaliser(provenance)]
+
+  doublonsProv <- valeursProv[, {
+    if (uniqueN(provenance) > 1L) {
+      .(
+        id        = NA_character_,
+        episodeId = NA_character_,
+        valeurObs = paste(provenance, collapse = " | "),
+        details   = paste0(
+          "Variantes potentielles détectées : ",
+          paste(provenance, collapse = " | ")
+        )
+      )
+    } else {
+      NULL
+    }
+  }, by = provenanceNorm][!is.na(id) | TRUE][nchar(valeurObs) > 0L]
+
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R25",
+    regleLabel = "Harmonisation libellés provenance",
+    section    = "S7 - Catégorielles",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = doublonsProv[!is.na(valeurObs)]
+  )
+
+  collecteur
+}
+
+# ============================================================
+# 8. SECTION 9–10 : COMPLÉTUDE ET TRAJECTOIRES
+# ============================================================
+
+validerCompletude <- function(dimJeune, factEpisode, collecteur) {
+
+  cat("  >> Validation complétude...\n")
+
+  # ----------------------------------------------------------
+  # R26 — Taux de NA sur les motifs de placement
+  # ----------------------------------------------------------
+  if ("motifsDePlacement" %in% names(factEpisode)) {
+    admissions <- factEpisode[typeEvenement == "admission"]
+    tauxNaMotif <- mean(
+      is.na(admissions$motifsDePlacement) |
+      admissions$motifsDePlacement == ""
+    )
+
+    if (tauxNaMotif > PARAM$seuilNaCritique) {
+      casMotif <- data.table(
+        id        = NA_character_,
+        episodeId = NA_character_,
+        valeurObs = sprintf("%.1f%%", tauxNaMotif * 100),
+        details   = paste0(
+          "Taux de NA motifs de placement = ",
+          sprintf("%.1f%%", tauxNaMotif * 100),
+          " (seuil = ", PARAM$seuilNaCritique * 100, "%)"
+        )
+      )
+      collecteur <- ajouterCas(
+        collecteur,
+        regleId    = "R26",
+        regleLabel = "Complétude motifs placement",
+        section    = "S9 - Complétude",
+        severite   = "ALERTE",
+        table      = "fact_episode",
+        dtCas      = casMotif
+      )
+    }
+  }
+
+  # ----------------------------------------------------------
+  # R27 — Épisodes en cours identifiables (dateFin NA)
+  # ----------------------------------------------------------
+  enCours <- factEpisode[is.na(dateFin), .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = typeEvenement,
+    details   = paste0(
+      "Épisode de type '", typeEvenement,
+      "' sans date de fin (en cours ou censure)"
+    )
+  )]
+  collecteur <- ajouterCas(
+    collecteur,
+    regleId    = "R27",
+    regleLabel = "Épisodes en cours identifiés",
+    section    = "S9 - Complétude",
+    severite   = "ALERTE",
+    table      = "fact_episode",
+    dtCas      = enCours
+  )
+
+  # ----------------------------------------------------------
+  # R28 — Chaque jeune a une suite d'épisodes reconstituable
+  # (au moins un séjour)
+  # ----------------------------------------------------------
+  idsAvecSejour <- unique(factEpisode[typeEvenement == "sejour", id])
+  idsSansSejour <- setdiff(unique(dimJeune$id), idsAvecSejour)
+
+  if (length(idsSansSejour) > 0L) {
+    sansSejour <- data.table(
+      id        = idsSansSejour,
+      episodeId = NA_character_,
+      valeurObs = NA_character_,
+      details   = "Jeune sans aucun séjour — trajectoire non reconstituable"
+    )
+    collecteur <- ajouterCas(
+      collecteur,
+      regleId    = "R28",
+      regleLabel = "Trajectoire reconstituable",
+      section    = "S10 - Trajectoires",
+      severite   = "ALERTE",
+      table      = "dim_jeune",
+      dtCas      = sansSejour
+    )
+  }
+
+  collecteur
+}
+
+# ============================================================
+# 9. ORCHESTRATEUR PRINCIPAL
+# ============================================================
+
+lancerValidation <- function(dimJeune, factEpisode) {
+
+  cat(strrep("=", 60), "\n")
+  cat("  DÉMARRAGE DE LA VALIDATION\n")
+  cat(strrep("=", 60), "\n")
+
+  # Initialisation du collecteur
+  collecteur <- data.table(
+    regleId     = character(),
+    regleLabel  = character(),
+    section     = character(),
+    severite    = character(),
+    table       = character(),
+    id          = character(),
+    episodeId   = character(),
+    valeurObs   = character(),
+    details     = character()
+  )
+
+  # Exécution séquentielle de toutes les sections
+  collecteur <- validerDimJeune(dimJeune, collecteur)
+  collecteur <- validerFactEpisode(factEpisode, collecteur)
+  collecteur <- validerRelations(dimJeune, factEpisode, collecteur)
+  collecteur <- validerTemporel(dimJeune, factEpisode, collecteur)
+  collecteur <- validerMetier(dimJeune, factEpisode, collecteur)
+  collecteur <- validerCategoriel(factEpisode, collecteur)
+  collecteur <- validerCompletude(dimJeune, factEpisode, collecteur)
+
+  cat(strrep("=", 60), "\n")
+  cat("  VALIDATION TERMINÉE\n")
+  cat(strrep("=", 60), "\n\n")
+
+  collecteur
+}
+
+# ============================================================
+# 10. RAPPORT FINAL
+# ============================================================
+
+afficherRapport <- function(casProblematiques) {
+
+  # --- Résumé global ---
+  nErreurs <- sum(casProblematiques$severite == "ERREUR")
+  nAlertes <- sum(casProblematiques$severite == "ALERTE")
+
+  cat(strrep("=", 60), "\n")
+  cat("  RAPPORT DE VALIDATION\n")
+  cat(strrep("=", 60), "\n")
+  cat(sprintf("  ❌  Erreurs : %d cas\n",  nErreurs))
+  cat(sprintf("  ⚠️   Alertes : %d cas\n",  nAlertes))
+  cat(sprintf("  📋  Total   : %d cas\n",  nrow(casProblematiques)))
+  cat(strrep("=", 60), "\n\n")
+
+  # --- Résumé par règle ---
+  cat("  RÉSUMÉ PAR RÈGLE\n")
+  cat(strrep("-", 60), "\n")
+
+  resumeParRegle <- casProblematiques[, .(
+    nCas     = .N,
+    severite = severite[1L],
+    section  = section[1L],
+    table    = table[1L]
+  ), by = .(regleId, regleLabel)][order(regleId)]
+
+  print(resumeParRegle)
+
+  # --- Tableau des cas problématiques ---
+  cat("\n  TABLEAU DES CAS PROBLÉMATIQUES\n")
+  cat(strrep("-", 60), "\n")
+  print(casProblematiques)
+
+  invisible(casProblematiques)
+}
+
+# ============================================================
+# 11. EXPORT
+# ============================================================
+
+exporterRapport <- function(casProblematiques,
+                             dossier = ".",
+                             prefixe = "validation") {
+
+  # Résumé par règle
+  resumeParRegle <- casProblematiques[, .(
+    nCas     = .N,
+    severite = severite[1L],
+    section  = section[1L],
+    table    = table[1L]
+  ), by = .(regleId, regleLabel)][order(regleId)]
+
+  # Export CSV
+  cheminResume <- file.path(
+    dossier, paste0(prefixe, "_resume_", Sys.Date(), ".csv")
+  )
+  cheminDetail <- file.path(
+    dossier, paste0(prefixe, "_detail_", Sys.Date(), ".csv")
+  )
+
+  fwrite(resumeParRegle,       cheminResume, bom = TRUE)
+  fwrite(casProblematiques,    cheminDetail, bom = TRUE)
+
+  cat(sprintf("✅ Résumé  exporté : %s\n", cheminResume))
+  cat(sprintf("✅ Détails exportés : %s\n", cheminDetail))
+
+  invisible(list(
+    resume = resumeParRegle,
+    detail = casProblematiques
+  ))
+}
+
+# ============================================================
+# 12. POINT D'ENTRÉE
+# ============================================================
+
+# Lancement de la validation
+casProblematiques <- lancerValidation(
+  dimJeune     = dimJeune,
+  factEpisode  = factEpisode
+)
+
+# Affichage du rapport
+afficherRapport(casProblematiques)
+
+# Export des résultats
+exporterRapport(
+  casProblematiques,
+  dossier = "output",
+  prefixe = "validation_luxembourg"
+)
+```
+
+------------------------------------------------------------------------
+
+## Ce que tu obtiens en sortie
+
+| Fichier | Contenu |
+|------------------------------------|------------------------------------|
+| `validation_luxembourg_resume_YYYY-MM-DD.csv` | Une ligne par règle avec le nombre de cas et la sévérité |
+| `validation_luxembourg_detail_YYYY-MM-DD.csv` | **Une ligne par cas problématique** avec l'ID du jeune, l'épisode concerné, la valeur observée et l'explication |
+
+Le tableau de détail te permet ensuite de **filtrer par règle** (`regleId`), par **sévérité** (`ERREUR` vs `ALERTE`), ou par **jeune** (`id`) pour corriger les données au cas par cas.
+
+User: penses-tu que c'est la meilleure manière de faire ou as tu une autre proposition? Une fonction par règle serait une bonne idée ? Qu'est-ce qui est préconisé dans ce genre de tâches ?
+
+Assistant: Excellente question. Laisse-moi d'abord te donner mon avis critique sur ce qui est préconisé dans le domaine, puis je te proposerai une architecture alternative.
+
+------------------------------------------------------------------------
+
+## 1. Critique de l'approche actuelle
+
+L'approche actuelle a **deux problèmes structurels** :
+
+| Problème | Explication |
+|--------------------------------|----------------------------------------|
+| **Fonctions monolithiques** | `validerFactEpisode()` fait 8 choses à la fois — difficile à tester, maintenir, étendre |
+| **Couplage fort** | Chaque fonction connaît le collecteur, la structure des tables, les paramètres globaux — tout est imbriqué |
+
+------------------------------------------------------------------------
+
+## 2. Ce qui est préconisé en pratique
+
+Dans le domaine de la **validation de données en production**, deux approches dominent :
+
+### A — Le pattern "Data Quality Framework"
+
+Utilisé par des packages comme `pointblank` (R) ou `great_expectations` (Python) : - **1 règle = 1 fonction pure** qui retourne `TRUE/FALSE` par ligne - Un **runner** applique toutes les règles et agrège les résultats - Les règles sont **déclaratives** (ce qu'on vérifie) séparées de la **logique d'application** (comment on vérifie)
+
+### B — Le package `pointblank`
+
+C'est exactement ton cas d'usage — il est fait pour ça :
+
+Excellente question — et la réponse courte est : **non, une fonction par règle n'est pas optimale non plus**. Voici mon analyse complète avec une proposition d'architecture.
+
+------------------------------------------------------------------------
+
+## 1. Comparaison des approches
+
+| Approche | Avantages | Inconvénients |
+|--------------------|----------------------|------------------------------|
+| **Fonctions monolithiques par section** (script actuel) | Simple à lire d'un bloc | Difficile à tester, maintenir, étendre |
+| **1 fonction par règle** | Très modulaire | Verbeux, 28+ fonctions à gérer, overhead cognitif élevé |
+| **`pointblank`** (package dédié) | Pipelines de validation lisibles, seuils de tolérance configurables, rapport HTML automatique | Ne couvre pas les règles inter-tables complexes (FK, métier) |
+| **Pattern registre de règles** ✅ | Meilleur des deux mondes : déclaratif + modulaire | Un peu plus à apprendre |
+
+------------------------------------------------------------------------
+
+## 2. Ma recommandation : architecture hybride en 2 couches
+
+### Pourquoi pas `pointblank` seul ?
+
+`pointblank` définit des étapes de validation via un agent, et permet d'extraire les lignes qui échouent. C'est parfait pour les règles **intra-table** (types, valeurs nulles, plages). Mais tes règles les plus importantes — chevauchements temporels, cohérence FK, fugues pendant séjours — sont des règles **inter-tables et multi-lignes** que `pointblank` ne peut pas gérer nativement.
+
+**La meilleure architecture est donc** : - `pointblank` pour les règles simples intra-table (types, NA, valeurs) - **Registre de règles custom** pour les règles complexes inter-tables
+
+------------------------------------------------------------------------
+
+## 3. Architecture proposée : le pattern "registre de règles"
+
+```         
+┌─────────────────────────────────────────┐
+│           REGISTRE DE RÈGLES            │
+│  Liste de règles déclaratives :         │
+│  - id, label, sévérité, table, fn       │
+└──────────────────┬──────────────────────┘
+                   │ map()
+                   ▼
+┌─────────────────────────────────────────┐
+│              RUNNER                     │
+│  Applique chaque règle,                 │
+│  collecte les cas problématiques        │
+└──────────────────┬──────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────┐
+│              RAPPORT                    │
+│  Tableau résumé + détail par cas        │
+└─────────────────────────────────────────┘
+```
+
+### Ce que ça change concrètement
+
+``` r
+# AVANT (approche actuelle) : logique + métadonnées mélangées
+validerFactEpisode <- function(factEpisode, collecteur) {
+  # R07 dans une fonction qui fait aussi R08, R09...
+  typesInvalides <- factEpisode[!typeEvenement %in% PARAM$typesValides, ...]
+  collecteur <- ajouterCas(collecteur, "R07", ...)
+  # R08...
+  # R09...
+}
+
+# APRÈS (pattern registre) : logique séparée des métadonnées
+regleTypeValide <- list(
+  id       = "R07",
+  label    = "Type épisode valide",
+  severite = "ERREUR",
+  section  = "S3 - Épisodes",
+  table    = "fact_episode",
+  # La règle = une fonction pure qui retourne les lignes problématiques
+  fn = function(tables) {
+    tables$factEpisode[!typeEvenement %in% PARAM$typesValides]
+  }
+)
+# Ajouter dans le registre → le runner fait le reste automatiquement
+```
+
+------------------------------------------------------------------------
+
+## 4. Implémentation complète
+
+``` r
+# ============================================================
+# VALIDATION — ARCHITECTURE REGISTRE DE RÈGLES
+# Auteur  : Jean-Eudes Méthodologiste
+# Version : 2.0
+# ============================================================
+# Architecture :
+#   1. PARAM        — paramètres globaux
+#   2. REGISTRE     — liste déclarative de règles
+#   3. FONCTIONS    — une fn pure par règle (retourne dt ou NULL)
+#   4. RUNNER       — applique toutes les règles via purrr::map
+#   5. RAPPORT      — agrège et présente les résultats
+# ============================================================
+
+library(data.table)
+library(purrr)
+library(pointblank)
+
+# ============================================================
+# 1. PARAMÈTRES GLOBAUX
+# ============================================================
+
+PARAM <- list(
+  ageMinAdmission   = 10L,
+  ageMaxAdmission   = 17L,
+  dureeMaxJours     = 365L * 3L,
+  toleranceMajorite = 30L,
+  seuilNaCritique   = 0.30,
+  typesValides      = c("admission", "sejour", "conge", "fugue", "suivi"),
+  structuresValides = c(
+    "CSEE_X Intensivpadagogische Wohngruppe",
+    "CSEE Unisec",
+    "CSEE_Y Aufnahmegruppe",
+    "CSEE_Z Intensivpadagogische Wohngruppe",
+    "CSEE_Y Studio",
+    "CSEE_Y Intensivpadagogische Wohngruppe",
+    "CSEE_Y semi-autonome Wohngruppe",
+    "CSEE Intensivpadagogische Wohngruppe"
+  )
+)
+
+# ============================================================
+# 2. FONCTIONS DE RÈGLES PURES
+# Signature uniforme : function(tables, param) → data.table | NULL
+# Retourne : les lignes problématiques avec colonnes
+#            id, episodeId, valeurObs, details
+#            OU NULL si aucun problème
+# ============================================================
+
+# --- Helpers internes ---
+
+# Normalise une colonne en character, remplace "" par NA
+normChar <- function(x) {
+  x <- as.character(x)
+  fifelse(is.na(x) | trimws(x) == "", NA_character_, x)
+}
+
+# Construit une data.table de cas vides (règle OK)
+aucunCas <- function() NULL
+
+# Vérifie qu'une data.table retournée a bien les bonnes colonnes
+# (programmation défensive)
+verifierColonnes <- function(dt) {
+  stopifnot(is.data.table(dt) || is.null(dt))
+  if (!is.null(dt) && nrow(dt) > 0L) {
+    colsAttendues <- c("id", "episodeId", "valeurObs", "details")
+    colsManquantes <- setdiff(colsAttendues, names(dt))
+    if (length(colsManquantes) > 0L) {
+      stop(paste("Colonnes manquantes dans le retour :",
+                 paste(colsManquantes, collapse = ", ")))
+    }
+  }
+  dt
+}
+
+# ---- Section 1-2 : dim_jeune --------------------------------
+
+# R01 — Unicité des ID jeunes
+fnR01 <- function(tables, param) {
+  dt <- tables$dimJeune
+  res <- dt[duplicated(id), .(
+    id        = id,
+    episodeId = NA_character_,
+    valeurObs = id,
+    details   = "Identifiant dupliqué dans dim_jeune"
+  )]
+  verifierColonnes(res)
+}
+
+# R02 — Naissance renseignée
+fnR02 <- function(tables, param) {
+  dt <- tables$dimJeune
+  res <- dt[
+    is.na(anneeDeNaissance) | is.na(moisDeNaissance), .(
+      id,
+      episodeId = NA_character_,
+      valeurObs = NA_character_,
+      details   = "Année ou mois de naissance manquant"
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# R03 — Cohérence date majorité / naissance (18 ans ± 6 mois)
+fnR03 <- function(tables, param) {
+  dt <- copy(tables$dimJeune)
+  dt[, dateNaissCalc := as.Date(paste0(
+    anneeDeNaissance, "-",
+    formatC(moisDeNaissance, width = 2L, flag = "0"),
+    "-01"
+  ))]
+  dt[, ageMaj := as.numeric(
+    difftime(dateMajorite, dateNaissCalc, units = "days")
+  ) / 365.25]
+
+  res <- dt[
+    !is.na(ageMaj) & (ageMaj < 17.5 | ageMaj > 18.5), .(
+      id,
+      episodeId = NA_character_,
+      valeurObs = as.character(round(ageMaj, 2L)),
+      details   = paste0(
+        "Âge à la majorité = ", round(ageMaj, 2L),
+        " ans (attendu 18 ± 0.5)"
+      )
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# R04 — Âge à l'admission plausible
+fnR04 <- function(tables, param) {
+  dt <- tables$dimJeune
+  if (!"ageAnnees" %in% names(dt)) return(aucunCas())
+  res <- dt[
+    !is.na(ageAnnees) & (
+      ageAnnees < param$ageMinAdmission |
+      ageAnnees > param$ageMaxAdmission
+    ), .(
+      id,
+      episodeId = NA_character_,
+      valeurObs = as.character(ageAnnees),
+      details   = paste0(
+        "Âge = ", ageAnnees, " ans (attendu ",
+        param$ageMinAdmission, "–", param$ageMaxAdmission, ")"
+      )
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# R05 — Sexe renseigné
+fnR05 <- function(tables, param) {
+  dt <- tables$dimJeune
+  if (!"sexe" %in% names(dt)) return(aucunCas())
+  res <- dt[is.na(normChar(sexe)), .(
+    id,
+    episodeId = NA_character_,
+    valeurObs = NA_character_,
+    details   = "Sexe manquant"
+  )]
+  verifierColonnes(res)
+}
+
+# ---- Section 3-5 : fact_episode -----------------------------
+
+# R06 — Types d'épisodes valides
+fnR06 <- function(tables, param) {
+  dt <- tables$factEpisode
+  res <- dt[!typeEvenement %in% param$typesValides, .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = typeEvenement,
+    details   = paste0(
+      "Type '", typeEvenement, "' invalide. ",
+      "Valides : ", paste(param$typesValides, collapse = ", ")
+    )
+  )]
+  verifierColonnes(res)
+}
+
+# R07 — Date de début renseignée
+fnR07 <- function(tables, param) {
+  dt <- tables$factEpisode
+  res <- dt[is.na(dateDebut), .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = NA_character_,
+    details   = paste0(
+      "Date de début manquante (type : ", typeEvenement, ")"
+    )
+  )]
+  verifierColonnes(res)
+}
+
+# R08 — Date fin >= date début
+fnR08 <- function(tables, param) {
+  dt <- tables$factEpisode[!is.na(dateFin)]
+  res <- dt[dateFin < dateDebut, .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = paste0(dateDebut, " → ", dateFin),
+    details   = paste0(
+      "Date fin (", dateFin,
+      ") antérieure à date début (", dateDebut, ")"
+    )
+  )]
+  verifierColonnes(res)
+}
+
+# R09 — Cohérence durée calculée vs stockée
+fnR09 <- function(tables, param) {
+  dt <- copy(tables$factEpisode[!is.na(dateFin) & !is.na(dateDebut)])
+  dt[, dureeCalc := as.integer(dateFin - dateDebut)]
+  res <- dt[
+    !is.na(duree) & abs(dureeCalc - duree) > 1L, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = paste0("stockée=", duree, " | calculée=", dureeCalc),
+      details   = paste0(
+        "Écart de ", abs(dureeCalc - duree),
+        " j entre durée stockée et calculée"
+      )
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# R10 — Durées négatives
+fnR10 <- function(tables, param) {
+  dt <- tables$factEpisode
+  res <- dt[!is.na(duree) & duree < 0L, .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = as.character(duree),
+    details   = paste0("Durée négative : ", duree, " jours")
+  )]
+  verifierColonnes(res)
+}
+
+# R11 — Durées excessivement longues
+fnR11 <- function(tables, param) {
+  dt <- tables$factEpisode
+  res <- dt[
+    !is.na(duree) & duree > param$dureeMaxJours, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = as.character(duree),
+      details   = paste0(
+        "Durée ", duree, "j > seuil ", param$dureeMaxJours, "j"
+      )
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# R12 — Ordre chronologique par jeune
+fnR12 <- function(tables, param) {
+  dt <- copy(tables$factEpisode)
+  setorder(dt, id, dateDebut)
+  dt[, debutPrec := shift(dateDebut, 1L), by = id]
+  dt[, idPrec    := shift(id, 1L)]
+  res <- dt[
+    !is.na(debutPrec) & id == idPrec & dateDebut < debutPrec, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = as.character(dateDebut),
+      details   = paste0(
+        "Début (", dateDebut,
+        ") < épisode précédent (", debutPrec, ")"
+      )
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# ---- Section 4 : relations ----------------------------------
+
+# R13 — FK : ID épisode → jeune existant
+fnR13 <- function(tables, param) {
+  idsJeune <- tables$dimJeune$id
+  res <- tables$factEpisode[!id %in% idsJeune, .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = id,
+    details   = paste0(
+      "ID '", id, "' absent de dim_jeune"
+    )
+  )]
+  verifierColonnes(res)
+}
+
+# R14 — FK : structure → référentiel
+fnR14 <- function(tables, param) {
+  dt <- tables$factEpisode
+  res <- dt[
+    typeEvenement == "sejour" &
+    !is.na(normChar(sejour)) &
+    !sejour %in% param$structuresValides, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = sejour,
+      details   = paste0("Structure '", sejour, "' hors référentiel")
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# R15 — Jeunes sans aucun épisode
+fnR15 <- function(tables, param) {
+  idsAvecEp <- unique(tables$factEpisode$id)
+  idsSans   <- setdiff(tables$dimJeune$id, idsAvecEp)
+  if (length(idsSans) == 0L) return(aucunCas())
+  res <- data.table(
+    id        = idsSans,
+    episodeId = NA_character_,
+    valeurObs = NA_character_,
+    details   = "Jeune sans aucun épisode associé"
+  )
+  verifierColonnes(res)
+}
+
+# ---- Section 5 : temporel -----------------------------------
+
+# R16 — Épisode après majorité
+fnR16 <- function(tables, param) {
+  dt <- merge(
+    tables$factEpisode[!is.na(dateDebut)],
+    tables$dimJeune[, .(id, dateMajorite)],
+    by = "id", all.x = TRUE
+  )
+  res <- dt[
+    !is.na(dateMajorite) &
+    dateDebut > dateMajorite + param$toleranceMajorite, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = as.character(dateDebut),
+      details   = paste0(
+        "Épisode le ", dateDebut,
+        " après majorité le ", dateMajorite,
+        " (tolérance ", param$toleranceMajorite, "j)"
+      )
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# R17 — Chevauchement entre séjours
+fnR17 <- function(tables, param) {
+  dt <- copy(tables$factEpisode[
+    typeEvenement == "sejour" & !is.na(dateDebut) & !is.na(dateFin)
+  ])
+  setorder(dt, id, dateDebut)
+  dt[, finPrec := shift(dateFin, 1L), by = id]
+  dt[, idPrec  := shift(id, 1L)]
+  res <- dt[
+    !is.na(finPrec) & id == idPrec & dateDebut < finPrec, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = paste0(dateDebut, " < fin préc. ", finPrec),
+      details   = paste0(
+        "Séjour débute le ", dateDebut,
+        " avant fin du séjour précédent (", finPrec, ")"
+      )
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# ---- Section 6 : métier -------------------------------------
+
+# R18 — Séjour sans structure
+fnR18 <- function(tables, param) {
+  dt <- tables$factEpisode
+  res <- dt[
+    typeEvenement == "sejour" & is.na(normChar(sejour)), .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = NA_character_,
+      details   = "Séjour sans structure associée"
+    )
+  ]
+  verifierColonnes(res)
+}
+
+# R19 — Fugue pendant séjour actif
+fnR19 <- function(tables, param) {
+  fugues  <- tables$factEpisode[
+    typeEvenement == "fugue" & !is.na(dateDebut)
+  ]
+  sejours <- tables$factEpisode[
+    typeEvenement == "sejour" & !is.na(dateDebut) & !is.na(dateFin)
+  ]
+
+  res <- purrr::map(unique(fugues$id), function(jeuneId) {
+    fuguesJ  <- fugues[id == jeuneId]
+    sejoursJ <- sejours[id == jeuneId]
+
+    if (nrow(sejoursJ) == 0L) {
+      return(fuguesJ[, .(
+        id,
+        episodeId = as.character(episodeId),
+        valeurObs = as.character(dateDebut),
+        details   = "Fugue sans aucun séjour pour ce jeune"
+      )])
+    }
+
+    couverte <- purrr::map_lgl(
+      seq_len(nrow(fuguesJ)),
+      function(i) {
+        any(
+          sejoursJ$dateDebut <= fuguesJ$dateDebut[i] &
+          sejoursJ$dateFin   >= fuguesJ$dateDebut[i]
+        )
+      }
+    )
+
+    fuguesJ[!couverte, .(
+      id,
+      episodeId = as.character(episodeId),
+      valeurObs = as.character(dateDebut),
+      details   = paste0(
+        "Fugue le ", dateDebut, " sans séjour actif correspondant"
+      )
+    )]
+  }) |>
+    purrr::keep(~ !is.null(.x) && nrow(.x) > 0L) |>
+    rbindlist(use.names = TRUE)
+
+  if (nrow(res) == 0L) return(aucunCas())
+  verifierColonnes(res)
+}
+
+# R20 — Cohérence sortie majorité / date majorité
+fnR20 <- function(tables, param) {
+  dt <- tables$factEpisode[
+    grepl("majorit", destination, ignore.case = TRUE) & !is.na(dateFin)
+  ]
+  if (nrow(dt) == 0L) return(aucunCas())
+
+  dt <- merge(
+    dt[, .(id, episodeId, dateFin)],
+    tables$dimJeune[, .(id, dateMajorite)],
+    by = "id"
+  )
+  dt[, ecart := abs(as.integer(dateFin - dateMajorite))]
+
+  res <- dt[ecart > param$toleranceMajorite, .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = paste0("sortie=", dateFin, " | maj=", dateMajorite),
+    details   = paste0(
+      "Écart de ", ecart,
+      "j entre sortie et majorité (tolérance ", param$toleranceMajorite, "j)"
+    )
+  )]
+  verifierColonnes(res)
+}
+
+# R21 — Provenance première admission manquante
+fnR21 <- function(tables, param) {
+  dt <- tables$factEpisode[typeEvenement == "admission"]
+  premiers <- dt[order(dateDebut), .SD[1L], by = id]
+  res <- premiers[is.na(normChar(provenance)), .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = NA_character_,
+    details   = "Provenance manquante pour la 1ère admission"
+  )]
+  verifierColonnes(res)
+}
+
+# R22 — Destination dernière admission manquante
+fnR22 <- function(tables, param) {
+  dt <- tables$factEpisode[typeEvenement == "admission"]
+  derniers <- dt[order(dateDebut), .SD[.N], by = id]
+  res <- derniers[is.na(normChar(destination)), .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = NA_character_,
+    details   = "Destination manquante pour la dernière admission"
+  )]
+  verifierColonnes(res)
+}
+
+# ---- Section 9 : complétude ---------------------------------
+
+# R23 — Taux NA motifs de placement
+fnR23 <- function(tables, param) {
+  dt <- tables$factEpisode[typeEvenement == "admission"]
+  if (!"motifsDePlacement" %in% names(dt)) return(aucunCas())
+
+  tauxNa <- mean(is.na(normChar(dt$motifsDePlacement)))
+  if (tauxNa <= param$seuilNaCritique) return(aucunCas())
+
+  data.table(
+    id        = NA_character_,
+    episodeId = NA_character_,
+    valeurObs = sprintf("%.1f%%", tauxNa * 100),
+    details   = paste0(
+      "Taux NA motifs = ", sprintf("%.1f%%", tauxNa * 100),
+      " > seuil ", param$seuilNaCritique * 100, "%"
+    )
+  ) |> verifierColonnes()
+}
+
+# R24 — Épisodes en cours sans date fin
+fnR24 <- function(tables, param) {
+  dt <- tables$factEpisode
+  res <- dt[is.na(dateFin), .(
+    id,
+    episodeId = as.character(episodeId),
+    valeurObs = typeEvenement,
+    details   = paste0(
+      "Épisode '", typeEvenement, "' sans date fin (en cours/censure)"
+    )
+  )]
+  verifierColonnes(res)
+}
+
+# R25 — Jeune sans séjour (trajectoire non reconstituable)
+fnR25 <- function(tables, param) {
+  idsAvecSej <- unique(tables$factEpisode[typeEvenement == "sejour", id])
+  idsSans    <- setdiff(tables$dimJeune$id, idsAvecSej)
+  if (length(idsSans) == 0L) return(aucunCas())
+  data.table(
+    id        = idsSans,
+    episodeId = NA_character_,
+    valeurObs = NA_character_,
+    details   = "Jeune sans séjour — trajectoire non reconstituable"
+  ) |> verifierColonnes()
+}
+
+# ============================================================
+# 3. REGISTRE DES RÈGLES
+# Structure déclarative : chaque règle est une ligne du registre
+# Ajouter une règle = ajouter une entrée ici + écrire sa fn
+# ============================================================
+
+registreRegles <- list(
+
+  # --- dim_jeune ---
+  list(id="R01", label="Unicité ID jeune",
+       section="S1-Général",   severite="ERREUR", table="dim_jeune",   fn=fnR01),
+  list(id="R02", label="Naissance renseignée",
+       section="S2-Individus", severite="ERREUR", table="dim_jeune",   fn=fnR02),
+  list(id="R03", label="Cohérence majorité/naissance",
+       section="S2-Individus", severite="ALERTE", table="dim_jeune",   fn=fnR03),
+  list(id="R04", label="Âge admission plausible",
+       section="S2-Individus", severite="ALERTE", table="dim_jeune",   fn=fnR04),
+  list(id="R05", label="Sexe renseigné",
+       section="S9-Complétude",severite="ALERTE", table="dim_jeune",   fn=fnR05),
+
+  # --- fact_episode ---
+  list(id="R06", label="Type épisode valide",
+       section="S3-Épisodes",  severite="ERREUR", table="fact_episode",fn=fnR06),
+  list(id="R07", label="Date début renseignée",
+       section="S3-Épisodes",  severite="ERREUR", table="fact_episode",fn=fnR07),
+  list(id="R08", label="Date fin >= date début",
+       section="S3-Épisodes",  severite="ERREUR", table="fact_episode",fn=fnR08),
+  list(id="R09", label="Cohérence durée calculée/stockée",
+       section="S8-Durées",    severite="ALERTE", table="fact_episode",fn=fnR09),
+  list(id="R10", label="Durée non négative",
+       section="S8-Durées",    severite="ERREUR", table="fact_episode",fn=fnR10),
+  list(id="R11", label="Durée non excessive",
+       section="S8-Durées",    severite="ALERTE", table="fact_episode",fn=fnR11),
+  list(id="R12", label="Ordre chronologique",
+       section="S3-Épisodes",  severite="ERREUR", table="fact_episode",fn=fnR12),
+
+  # --- relations ---
+  list(id="R13", label="FK jeune valide",
+       section="S4-Relations", severite="ERREUR", table="fact_episode",fn=fnR13),
+  list(id="R14", label="Structure dans référentiel",
+       section="S4-Relations", severite="ALERTE", table="fact_episode",fn=fnR14),
+  list(id="R15", label="Jeune avec au moins un épisode",
+       section="S4-Relations", severite="ALERTE", table="dim_jeune",   fn=fnR15),
+
+  # --- temporel ---
+  list(id="R16", label="Épisode avant majorité",
+       section="S5-Temporel",  severite="ALERTE", table="fact_episode",fn=fnR16),
+  list(id="R17", label="Pas de chevauchement séjours",
+       section="S5-Temporel",  severite="ERREUR", table="fact_episode",fn=fnR17),
+
+  # --- métier ---
+  list(id="R18", label="Séjour avec structure",
+       section="S6-Métier",    severite="ERREUR", table="fact_episode",fn=fnR18),
+  list(id="R19", label="Fugue pendant séjour actif",
+       section="S6-Métier",    severite="ALERTE", table="fact_episode",fn=fnR19),
+  list(id="R20", label="Cohérence sortie majorité",
+       section="S6-Métier",    severite="ALERTE", table="fact_episode",fn=fnR20),
+  list(id="R21", label="Provenance 1ère admission",
+       section="S6-Métier",    severite="ALERTE", table="fact_episode",fn=fnR21),
+  list(id="R22", label="Destination dernière admission",
+       section="S6-Métier",    severite="ALERTE", table="fact_episode",fn=fnR22),
+
+  # --- complétude ---
+  list(id="R23", label="Complétude motifs placement",
+       section="S9-Complétude",severite="ALERTE", table="fact_episode",fn=fnR23),
+  list(id="R24", label="Épisodes en cours identifiés",
+       section="S9-Complétude",severite="INFO",   table="fact_episode",fn=fnR24),
+  list(id="R25", label="Trajectoire reconstituable",
+       section="S10-Trajectoires",severite="ALERTE",table="dim_jeune", fn=fnR25)
+)
+
+# ============================================================
+# 4. RUNNER — applique toutes les règles via purrr::map
+# ============================================================
+
+lancerValidation <- function(tables, registre, param) {
+
+  cat(strrep("=", 60), "\n")
+  cat("  VALIDATION EN COURS...\n")
+  cat(strrep("=", 60), "\n")
+
+  # Application de chaque règle
+  resultats <- purrr::map(registre, function(regle) {
+
+    cat(sprintf("  [%s] %s\n", regle$id, regle$label))
+
+    # Exécution défensive : capture les erreurs sans tout arrêter
+    cas <- tryCatch(
+      regle$fn(tables, param),
+      error = function(e) {
+        warning(sprintf("[%s] Erreur : %s", regle$id, conditionMessage(e)))
+        data.table(
+          id        = NA_character_,
+          episodeId = NA_character_,
+          valeurObs = NA_character_,
+          details   = paste0("ERREUR D'EXÉCUTION : ", conditionMessage(e))
+        )
+      }
+    )
+
+    # Si aucun problème : retourner NULL
+    if (is.null(cas) || nrow(cas) == 0L) return(NULL)
+
+    # Enrichissement avec les métadonnées de la règle
+    cas[, `:=`(
+      regleId    = regle$id,
+      regleLabel = regle$label,
+      section    = regle$section,
+      severite   = regle$severite,
+      table      = regle$table
+    )]
+    cas
+  })
+
+  # Agrégation : supprimer les NULL et empiler
+  casProblematiques <- resultats |>
+    purrr::keep(~ !is.null(.x)) |>
+    rbindlist(use.names = TRUE, fill = TRUE)
+
+  # Réordonnancement des colonnes pour lisibilité
+  setcolorder(casProblematiques, c(
+    "regleId", "regleLabel", "section", "severite", "table",
+    "id", "episodeId", "valeurObs", "details"
+  ))
+  setorder(casProblematiques, regleId, id)
+
+  cat(strrep("=", 60), "\n")
+  cat(sprintf(
+    "  Terminé : %d erreurs | %d alertes | %d total\n",
+    sum(casProblematiques$severite == "ERREUR"),
+    sum(casProblematiques$severite == "ALERTE"),
+    nrow(casProblematiques)
+  ))
+  cat(strrep("=", 60), "\n\n")
+
+  casProblematiques
+}
+
+# ============================================================
+# 5. RAPPORT ET EXPORT
+# ============================================================
+
+afficherRapport <- function(casProblematiques) {
+
+  # Résumé par règle
+  resumeParRegle <- casProblematiques[, .(
+    nCas     = .N,
+    severite = severite[1L],
+    section  = section[1L],
+    table    = table[1L]
+  ), by = .(regleId, regleLabel)][order(regleId)]
+
+  cat("\n  RÉSUMÉ PAR RÈGLE\n")
+  cat(strrep("-", 60), "\n")
+  print(resumeParRegle)
+
+  invisible(list(
+    resume = resumeParRegle,
+    detail = casProblematiques
+  ))
+}
+
+exporterRapport <- function(casProblematiques,
+                             dossier = "output",
+                             prefixe = "validation") {
+  if (!dir.exists(dossier)) dir.create(dossier, recursive = TRUE)
+
+  resumeParRegle <- casProblematiques[, .(
+    nCas     = .N,
+    severite = severite[1L],
+    section  = section[1L],
+    table    = table[1L]
+  ), by = .(regleId, regleLabel)][order(regleId)]
+
+  fwrite(resumeParRegle,    file.path(dossier,
+    paste0(prefixe, "_resume_", Sys.Date(), ".csv")), bom = TRUE)
+  fwrite(casProblematiques, file.path(dossier,
+    paste0(prefixe, "_detail_", Sys.Date(), ".csv")), bom = TRUE)
+
+  cat("✅ Exports réalisés dans :", dossier, "\n")
+  invisible(list(resume = resumeParRegle, detail = casProblematiques))
+}
+
+# ============================================================
+# 6. POINT D'ENTRÉE
+# ============================================================
+
+# Regroupement des tables dans une liste (interface unique du runner)
+tables <- list(
+  dimJeune     = dimJeune,
+  factEpisode  = factEpisode
+)
+
+# Lancement
+casProblematiques <- lancerValidation(tables, registreRegles, PARAM)
+afficherRapport(casProblematiques)
+exporterRapport(casProblematiques, dossier = "output")
+```
+
+------------------------------------------------------------------------
+
+## 5. Pourquoi cette architecture est supérieure
+
+| Critère | Script V1 | **Registre V2** |
+|------------------|---------------------|---------------------------------|
+| Ajouter une règle | Modifier une grosse fonction | Écrire `fnRxx` + 1 ligne dans le registre |
+| Tester une règle | Difficile (couplée) | `fnR17(tables, PARAM)` directement |
+| Ordre d'exécution | Figé dans le code | Contrôlable par `filter()` sur le registre |
+| Rapport | Manuel | Automatique via le runner |
+| Exécution partielle | Impossible | `registreRegles[c(1,3,5)]` |
+| Capture d'erreur | Tout plante | `tryCatch` par règle |
+
+User: Pourquoi le paramètre dureeMaxJours est de 365L \$ 3L?
+
+Assistant: Bonne question — c'est un choix **arbitraire de ma part** que j'aurais dû documenter et justifier explicitement plutôt que de le poser comme une évidence.
+
+------------------------------------------------------------------------
+
+## Pourquoi ce chiffre est problématique ici
+
+J'ai mis `365L * 3L = 1095 jours` (3 ans) comme seuil d'alerte pour les durées longues. Mais ce seuil est **issu de mon raisonnement général** sur les placements, pas de ta réalité métier au Luxembourg.
+
+Dans tes données, on voit par exemple :
+
+``` javascript
+Cas 1 : Admission 1 → 645 jours  (≈ 1 an 9 mois)  ✅ sous le seuil
+Cas 2 : Admission 1 → 821 jours  (≈ 2 ans 3 mois)  ✅ sous le seuil
+```
+
+Mais **toi seul peux répondre** aux questions suivantes :
+
+| Question | Impact sur le paramètre |
+|------------------------------------|------------------------------------|
+| Quelle est la durée maximale légale d'un placement en institution au Luxembourg ? | Borne dure |
+| Quelle est la durée maximale observée dans tes données ? | Borne empirique |
+| À partir de quand une durée est-elle cliniquement suspecte ? | Borne métier |
+| Les jeunes peuvent-ils être placés jusqu'à leur majorité depuis l'enfance ? | Durée possible de 8–10 ans |
+
+------------------------------------------------------------------------
+
+## La bonne approche : définir le seuil empiriquement
+
+Avant de fixer ce paramètre, il faudrait regarder la distribution :
+
+``` r
+# Distribution des durées par type d'événement
+# pour fixer un seuil informé plutôt qu'arbitraire
+factEpisode[!is.na(duree), .(
+  min    = min(duree),
+  p25    = quantile(duree, 0.25),
+  median = median(duree),
+  p75    = quantile(duree, 0.75),
+  p90    = quantile(duree, 0.90),
+  p95    = quantile(duree, 0.95),
+  p99    = quantile(duree, 0.99),
+  max    = max(duree)
+), by = typeEvenement]
+```
+
+Le seuil `dureeMaxJours` devrait ensuite être fixé à partir de ce que tu observes — par exemple le **p99 + expertise métier**, pas un chiffre sorti de ma tête.
+
+------------------------------------------------------------------------
+
+## Ce qu'il faut faire
+
+``` r
+# À remplacer par une valeur issue de :
+# 1. La réglementation luxembourgeoise sur le placement
+# 2. La distribution empirique de tes données (p99)
+# 3. L'expertise métier de ton équipe
+PARAM <- list(
+  # ...
+  dureeMaxJours = NA_integer_  # ← à définir après analyse exploratoire
+  # ...
+)
+```
+
+C'est un bon exemple de pourquoi les paramètres de validation **ne doivent jamais être fixés a priori sans données** — merci de l'avoir relevé.
