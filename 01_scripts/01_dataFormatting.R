@@ -1,6 +1,5 @@
-
 # Chargement et nettoyage des tables
-# Auteur : Jean-Eudes Méthodologiste
+# Auteur : Alexandre Poncin
 
 
 
@@ -19,12 +18,18 @@ pacman::p_load(
 # 2. Chargement des données ----
 dtTrajectoires <- fread(here("02_inputFiles", "11_XYZTrajectoires.csv"))
 dtProfiles <- fread(here("02_inputFiles", "11_XYZProfiles.csv"))
-dtStructure <- fread(here("02_inputFiles", "20260401_tableProvenancesDestinations_def.csv"), header = TRUE)
+dtStructures <- fread(here("02_inputFiles", "20260401_tableProvenancesDestinations_def.csv"), header = TRUE)
 # 3. Nettoyage et formattage ----
+## A. dtStructures
+dtStructures[, c("V4", "V5", "V6") := NULL]
+dtStructures <- dtStructures[!provenancesEtDestinations %in% c("CSEE_X", "CSEE_Y", "CSEE_Z")]
+dtStructures[, ID := .I] #Ajout d'un ID (num de ligne)
+
 ## A. dtTrajectoires ----
 dtTrajectoires <- cleanTextCols(dtTrajectoires)
 names(dtTrajectoires) <- to_lower_camel_case(names(dtTrajectoires))
 names(dtTrajectoires) <- replace_non_ascii(names(dtTrajectoires))
+dtTrajectoires[, episodeID := .I]
 
 ## B. dtProfiles ----
 dtProfiles <- cleanTextCols(dtProfiles)
@@ -48,6 +53,7 @@ dtTrajectoires[, duree := as.numeric(dateFin - dateDebut)]
 ## E. Suppression des lignes fantômes ----
 dtTrajectoires <- dtTrajectoires[!is.na(cas) & !is.na(dateDebut)]
 
+# 4. Jointure des tables ----
 
 
 
