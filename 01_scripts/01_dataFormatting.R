@@ -1,8 +1,6 @@
 # Chargement et nettoyage des tables
 # Auteur : Alexandre Poncin
 
-
-
 # 1. Chargement des librairies, sources et création des paramètres ----
 ## A. Library ----
 pacman::p_load(
@@ -14,49 +12,85 @@ pacman::p_load(
   textclean
 )
 ## B. Sources internes ----
-
-# 2. Chargement des données ----
-dtTrajectoires <- fread(here("02_inputFiles", "11_XYZTrajectoires.csv"))
-dtProfiles <- fread(here("02_inputFiles", "11_XYZProfiles.csv"))
-dtStructures <- fread(here("02_inputFiles", "20260401_tableProvenancesDestinations_def.csv"), header = TRUE)
-# 3. Nettoyage et formattage ----
-## A. dtStructures
-dtStructures[, c("V4", "V5", "V6") := NULL]
-dtStructures <- dtStructures[!provenancesEtDestinations %in% c("CSEE_X", "CSEE_Y", "CSEE_Z")]
-dtStructures[, ID := .I] #Ajout d'un ID (num de ligne)
-
-## A. dtTrajectoires ----
-dtTrajectoires <- cleanTextCols(dtTrajectoires)
-names(dtTrajectoires) <- to_lower_camel_case(names(dtTrajectoires))
-names(dtTrajectoires) <- replace_non_ascii(names(dtTrajectoires))
-dtTrajectoires[, episodeID := .I]
-
-## B. dtProfiles ----
-dtProfiles <- cleanTextCols(dtProfiles)
-names(dtProfiles) <- to_lower_camel_case(names(dtProfiles))
-names(dtProfiles) <- replace_non_ascii(names(dtProfiles))
-
-## C. Conversion dates Excel (format numérique) vers Date ----
+## C. Fonctions helpers ----
+### Fct conversion date excel
 excelToDate <- function(x) {
   as.Date(as.numeric(x), origin = "1899-12-30")
 }
-
-dtTrajectoires[, dateMajorite := excelToDate(dtTrajectoires[["dateMajorite"]])]
-
-## D. Conversion des colonnes de dates (format dd.mm.yyyy) ----
+### Fct parsing date dmy
 parseDMY <- function(x) as.Date(x, format = "%d.%m.%Y")
 
+
+# 2. Chargement des données ----
+dtTrajectoiresBrute <- fread(here("02_inputFiles", "11_XYZTrajectoires.csv"))
+dtProfilesBrute <- fread(here("02_inputFiles", "11_XYZProfiles.csv"))
+dtStructuresBrute <- fread(here("02_inputFiles", "20260401_tableProvenancesDestinations_def.csv"), header = TRUE)
+
+dtTrajectoires <- copy(dtTrajectoiresBrute)
+dtProfiles <- copy(dtProfilesBrute)
+dtStructures <- copy(dtStructuresBrute)
+
+# 3. Nettoyage et formattage ----
+## A. dtStructures
+### Clean text
+dtStructures <- cleanTextCols(dtStructures)
+names(dtStructures) <- to_lower_camel_case(names(dtStructures))
+names(dtStructures) <- replace_non_ascii(names(dtStructures))
+setnames(
+  x = dtStructures,
+  old = "provenancesEtDestinations",
+  new = "nomStructure"
+)
+
+### Suppression lignes et colonnes fantômes
+dtStructures[, c("v4", "v5", "v6") := NULL]
+dtStructures <- dtStructures[!nomStructure %in% c("CSEE_X", "CSEE_Y", "CSEE_Z")]
+### Ajout d'un ID (num de ligne)
+dtStructures[, idStructure := .I] 
+
+## B. dtTrajectoires ----
+### Clean text
+dtTrajectoires <- cleanTextCols(dtTrajectoires)
+names(dtTrajectoires) <- to_lower_camel_case(names(dtTrajectoires))
+names(dtTrajectoires)  <- replace_non_ascii(names(dtTrajectoires))
+### Conversion des dates (format dd.mm.yyyy) ----
+dtTrajectoires[, dateMajorite := excelToDate(dtTrajectoires[["dateMajorite"]])] # Excel (format numérique) vers Date
 dtTrajectoires[, dateDebut := parseDMY(`dateDeDebut`)]
 dtTrajectoires[, dateFin := parseDMY(`dateDeFin`)]
 dtTrajectoires[, duree := as.numeric(dateFin - dateDebut)]
-
-## E. Suppression des lignes fantômes ----
+### Suppression des lignes fantômes ----
 dtTrajectoires <- dtTrajectoires[!is.na(cas) & !is.na(dateDebut)]
+### Ajout ID (num de ligne) ----
+dtTrajectoires[, idEpisode := .I]
 
-# 4. Jointure des tables ----
+## C. dtProfiles ----
+### Clean text ----
+dtProfiles <- cleanTextCols(dtProfiles)
+names(dtProfiles) <- replace_non_ascii(names(dtProfiles))
+names(dtProfiles) <- to_lower_camel_case(names(dtProfiles))
+### Ajout ID (num de ligne) ----
+dtProfiles[, idProfile := .I]
+
+# 4. Renommage des tables pour une future mise en DB ----
+dimStructure <- copy(dtStructures)
+dimJeune <- copy(dtProfiles)
+factEpisode <- copy(dtTrajectoires)
+
+# 5. Jointure des tables ----
+
+factEpisode <- merge(
+  factEpisode,
+  dimStructure[, .(nomStructure, idStructure)],
+  by.x = "sejour",
+  by.y = "nomStructure",
+  all.x = TRUE
+)
 
 
-
+# Vérification que les 3 tables sont bien construites
+cat("dim_jeune    :", nrow(dimJeune),    "jeunes\n")
+cat("dim_structure:", nrow(dimStructure),"structures\n")
+cat("fact_episode :", nrow(factEpisode), "épisodes\n")
 
 
 
